@@ -47,19 +47,19 @@ For a detailed explanation of the project structure, see [PROJECT_STRUCTURE.md](
 
 ### Home Page
 
-![Home Page](https://placeholder-for-home-screenshot.com)
+![Home Page](screenshots/home.webp)
 
 ### Destination Page
 
-![Destination Page](https://placeholder-for-destination-screenshot.com)
+![Destination Page](screenshots/destination.webp)
 
 ### Crew Page
 
-![Crew Page](https://placeholder-for-crew-screenshot.com)
+![Crew Page](screenshots/crew.webp)
 
 ### Technology Page
 
-![Technology Page](https://placeholder-for-technology-screenshot.com)
+![Technology Page](screenshots/technology.webp)
 
 ## Getting Started
 
