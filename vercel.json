@@ -1,15 +1,12 @@
 {
   "version": 2,
-  "builds": [
+  "buildCommand": "npm run build",
+  "outputDirectory": "build/client",
+  "framework": "remix",
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/remix"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
