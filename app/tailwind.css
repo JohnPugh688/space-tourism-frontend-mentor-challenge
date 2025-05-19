@@ -1,3 +1,81 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Bellefair&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap');
+
+@import 'tailwindcss';
+
+/* ---------------------- */
+/*    Custom Properties   */
+/* ---------------------- */
+@theme {
+  /* Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-dark: #0b0d17;
+  --color-accent: #d0d6f9;
+
+  /* Fonts */
+  --font-bellefair: 'Bellefair', serif;
+  --font-barlow: 'Barlow', sans-serif;
+  --font-barlow-condensed: 'Barlow Condensed', sans-serif;
+
+  /* Other Custom Properties */
+  --spacing-dropdown-padding: 1rem;
+  --radius-dropdown: 0.375rem;
+}
+
+/* ---------------------- */
+/*       Utilities        */
+/* ---------------------- */
+@layer utilities {
+  /* Add any custom utilities here */
+}
+
+/* ---------------------- */
+/*       Animations       */
+/* ---------------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes planet-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(0.95);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.animate-planet-spin {
+  animation: planet-spin 40s linear infinite;
+  will-change: transform;
+}
+
+/* ---------------------- */
+/*         Base           */
+/* ---------------------- */
+@layer base {
+  body {
+    font-family: 'Barlow', sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Bellefair', serif;
+  }
+}
