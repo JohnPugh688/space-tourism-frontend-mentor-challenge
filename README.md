@@ -6,7 +6,7 @@
 
 This is my solution to the [Space tourism website challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/space-tourism-multipage-website-gRWj1URZ3). The project is a multi-page website for a fictional space tourism company, featuring information about space destinations, crew members, and technology.
 
-### [Live Demo](https://space-tourism-frontend-mentor-challenge.vercel.app/)
+### [Live Demo](https://practise-remix-project-3d7gu7bey-johnh4pugh-gmailcoms-projects.vercel.app/)
 
 ## Features
 
