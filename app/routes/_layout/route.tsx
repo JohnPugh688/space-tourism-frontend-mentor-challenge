@@ -34,7 +34,7 @@ export default function Layout() {
       <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
       {/* Page content with transition */}
-      <main className="relative min-h-[calc(100vh-96px)]">
+      <div className="relative min-h-[calc(100vh-96px)]">
         {/* Keep the old page visible until the new one is ready */}
         <div className="relative w-full h-full">
           <div
@@ -45,7 +45,7 @@ export default function Layout() {
             <Outlet />
           </div>
         </div>
-      </main>
+      </div>
     </div>
     //   </ModalProvider>
     // </CartProvider>
