@@ -4,6 +4,9 @@ import type { Destination } from '~/types/destination'
 import type { CrewMember } from '~/types/crew'
 import type { Technology } from '~/types/technology'
 
+// Set max duration for Vercel Function to 30 seconds (default is 10s)
+export const maxDuration = 30
+
 interface DestinationRow {
   name: string
   description: string
@@ -33,8 +36,8 @@ interface TechnologyRow {
 const MAX_RETRIES = 3
 const RETRY_DELAY = 1000 // 1 second
 
-// Force use fallback in production for now
-const FORCE_FALLBACK = process.env.NODE_ENV === 'production'
+// Use fallback only if explicitly set to true
+const FORCE_FALLBACK = false
 
 export async function getDestinations() {
   // If we're forcing fallback data in production, return it immediately

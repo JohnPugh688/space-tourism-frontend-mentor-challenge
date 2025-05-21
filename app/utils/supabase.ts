@@ -34,6 +34,16 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       'x-client-info': '@supabase/auth-helpers-remix',
     },
   },
+  // Use direct connection to Supavisor for better performance
+  db: {
+    schema: 'public',
+  },
+  // Optimize for short connections
+  realtime: {
+    params: {
+      eventsPerSecond: 1,
+    },
+  },
 })
 
 // Export a helper function to check connection
