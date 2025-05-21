@@ -1,7 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Check for required environment variables
-if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      SUPABASE_URL: string
+      SUPABASE_ANON_KEY: string
+    }
+  }
+}
+
+if (typeof process.env.SUPABASE_URL !== 'string' || typeof process.env.SUPABASE_ANON_KEY !== 'string') {
   throw new Error('Missing required Supabase environment variables')
 }
 
