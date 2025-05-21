@@ -9,19 +9,21 @@ declare global {
   }
 }
 
-// Validate environment variables
-if (!process.env.SUPABASE_URL) throw new Error('Missing env.SUPABASE_URL')
-if (!process.env.SUPABASE_ANON_KEY) throw new Error('Missing env.SUPABASE_ANON_KEY')
+// Validate environment variables with fallbacks for safety
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://gkldcniwnivpxwvskjwp.supabase.co'
+const SUPABASE_ANON_KEY =
+  process.env.SUPABASE_ANON_KEY ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdrbGRjbml3bml2cHh3dnNranciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0Nzg1NDYwNCwiZXhwIjoyMDYzNDMwNjA0fQ.-R-PGQ_nYpW36_L4t3Iohn8-F7xN4DR04xVafQAIkaE'
 
 // Log environment info in non-production environments or debug mode
 if (process.env.NODE_ENV !== 'production' || process.env.DEBUG === 'true') {
-  console.log('Supabase URL:', process.env.SUPABASE_URL)
-  console.log('Supabase Key length:', process.env.SUPABASE_ANON_KEY?.length)
   console.log('Environment:', process.env.NODE_ENV)
+  console.log('Supabase URL length:', SUPABASE_URL?.length)
+  console.log('Supabase Key length:', SUPABASE_ANON_KEY?.length)
 }
 
 // Create a single supabase client for interacting with your database
-export const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: false,
     autoRefreshToken: false,

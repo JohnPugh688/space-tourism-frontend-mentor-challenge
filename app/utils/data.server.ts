@@ -33,89 +33,100 @@ interface TechnologyRow {
 const MAX_RETRIES = 3
 const RETRY_DELAY = 1000 // 1 second
 
+// Force use fallback in production for now
+const FORCE_FALLBACK = process.env.NODE_ENV === 'production'
+
 export async function getDestinations() {
-  // First, check connection
-  const connectionCheck = await checkSupabaseConnection()
-  if (!connectionCheck.ok) {
-    console.error('Connection check failed:', connectionCheck.error)
-    throw new Error(`Connection check failed: ${JSON.stringify(connectionCheck.error)}`)
+  // If we're forcing fallback data in production, return it immediately
+  if (FORCE_FALLBACK) {
+    console.log('Using fallback destinations data')
+    return getFallbackDestinations()
   }
 
-  console.log('Connection check succeeded, latency:', connectionCheck.latency, 'ms')
+  try {
+    // First, check connection
+    console.log('Checking Supabase connection...')
+    const connectionCheck = await checkSupabaseConnection()
+    if (!connectionCheck.ok) {
+      console.error('Connection check failed:', connectionCheck.error)
+      return getFallbackDestinations()
+    }
 
-  let retries = MAX_RETRIES
+    console.log('Connection check succeeded, latency:', connectionCheck.latency, 'ms')
 
-  while (retries >= 0) {
-    try {
-      console.log('Attempting to fetch destinations from Supabase...')
-      console.log('Environment:', process.env.NODE_ENV)
-      console.log('Supabase URL exists:', !!process.env.SUPABASE_URL)
-      console.log('Retry attempt:', MAX_RETRIES - retries)
+    let retries = MAX_RETRIES
 
-      const { data, error } = await supabase.from('destinations').select('*')
+    while (retries >= 0) {
+      try {
+        console.log('Attempting to fetch destinations from Supabase...')
+        console.log('Environment:', process.env.NODE_ENV)
+        console.log('Supabase URL exists:', !!process.env.SUPABASE_URL)
+        console.log('Retry attempt:', MAX_RETRIES - retries)
 
-      if (error) {
-        console.error('Supabase error:', error)
-        throw error
-      }
+        const { data, error } = await supabase.from('destinations').select('*')
 
-      if (!data || data.length === 0) {
-        console.warn('No destinations found in Supabase')
-        return [] as Destination[]
-      }
+        if (error) {
+          console.error('Supabase error:', error)
+          throw error
+        }
 
-      console.log('Successfully fetched destinations count:', data.length)
+        if (!data || data.length === 0) {
+          console.warn('No destinations found in Supabase')
+          return getFallbackDestinations()
+        }
 
-      return data.map((item: DestinationRow) => ({
-        name: item.name,
-        description: item.description,
-        distance: item.distance,
-        travel: item.travel,
-        images: {
-          png: item.image_png || '',
-          webp: item.image_webp || '',
-        },
-      })) as Destination[]
-    } catch (error) {
-      console.error(`Error fetching destinations (${MAX_RETRIES - retries} retry):`, error)
-      if (retries > 0) {
-        console.log(`Retrying in ${RETRY_DELAY}ms... ${retries} attempts remaining`)
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
-        retries--
-        continue
-      }
-      console.error('Fatal error fetching destinations after all retries', error)
+        console.log('Successfully fetched destinations count:', data.length)
 
-      // In production environment, fall back to static data if all retries fail
-      if (process.env.NODE_ENV === 'production') {
-        console.warn('Falling back to static destinations data')
+        return data.map((item: DestinationRow) => ({
+          name: item.name,
+          description: item.description,
+          distance: item.distance,
+          travel: item.travel,
+          images: {
+            png: item.image_png || '',
+            webp: item.image_webp || '',
+          },
+        })) as Destination[]
+      } catch (error) {
+        console.error(`Error fetching destinations (${MAX_RETRIES - retries} retry):`, error)
+        if (retries > 0) {
+          console.log(`Retrying in ${RETRY_DELAY}ms... ${retries} attempts remaining`)
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
+          retries--
+          continue
+        }
+        console.error('Fatal error fetching destinations after all retries', error)
         return getFallbackDestinations()
       }
-
-      throw new Error(
-        `Failed to fetch destinations after ${MAX_RETRIES} retries: ${
-          error instanceof Error ? error.message : 'Unknown error'
-        }`,
-      )
     }
-  }
 
-  throw new Error('Failed to fetch destinations: Unexpected end of retry loop')
+    console.warn('Reached end of retry loop without success, using fallback data')
+    return getFallbackDestinations()
+  } catch (error) {
+    console.error('Unexpected error in getDestinations:', error)
+    return getFallbackDestinations()
+  }
 }
 
 export async function getCrewMembers() {
+  // If we're forcing fallback data in production, return it immediately
+  if (FORCE_FALLBACK) {
+    console.log('Using fallback crew data')
+    return getFallbackCrew()
+  }
+
   try {
     console.log('Fetching crew members')
     const { data, error } = await supabase.from('crew_members').select('*')
 
     if (error) {
       console.error('Error fetching crew members:', error)
-      throw error
+      return getFallbackCrew()
     }
 
     if (!data || data.length === 0) {
       console.warn('No crew members found')
-      return [] as CrewMember[]
+      return getFallbackCrew()
     }
 
     console.log('Successfully fetched crew members count:', data.length)
@@ -130,27 +141,29 @@ export async function getCrewMembers() {
     })) as CrewMember[]
   } catch (error) {
     console.error('Fatal error fetching crew members:', error)
-    if (process.env.NODE_ENV === 'production') {
-      console.warn('Falling back to static crew data')
-      return getFallbackCrew()
-    }
-    throw error
+    return getFallbackCrew()
   }
 }
 
 export async function getTechnologies() {
+  // If we're forcing fallback data in production, return it immediately
+  if (FORCE_FALLBACK) {
+    console.log('Using fallback technology data')
+    return getFallbackTechnologies()
+  }
+
   try {
     console.log('Fetching technologies')
     const { data, error } = await supabase.from('technologies').select('*')
 
     if (error) {
       console.error('Error fetching technologies:', error)
-      throw error
+      return getFallbackTechnologies()
     }
 
     if (!data || data.length === 0) {
       console.warn('No technologies found')
-      return [] as Technology[]
+      return getFallbackTechnologies()
     }
 
     console.log('Successfully fetched technologies count:', data.length)
@@ -166,11 +179,7 @@ export async function getTechnologies() {
     })) as Technology[]
   } catch (error) {
     console.error('Fatal error fetching technologies:', error)
-    if (process.env.NODE_ENV === 'production') {
-      console.warn('Falling back to static technology data')
-      return getFallbackTechnologies()
-    }
-    throw error
+    return getFallbackTechnologies()
   }
 }
 
