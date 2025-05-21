@@ -3,7 +3,7 @@ import type { MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from '@remix-run/react'
 import OptimizedBackground from '~/components/shared/OptimizedBackground'
-import { getCrew } from '~/utils/data.server'
+import { getCrewMembers } from '~/utils/data.server'
 import ErrorBoundaryComponent from '~/components/shared/ErrorBoundary'
 
 export const meta: MetaFunction = () => [
@@ -13,9 +13,9 @@ export const meta: MetaFunction = () => [
 
 export async function loader() {
   try {
-    // SUPABASE VERSION: getCrew() now returns a Promise that resolves to an array of crew members
+    // SUPABASE VERSION: getCrewMembers() now returns a Promise that resolves to an array of crew members
     // We need to await the result since we're getting data from a database now
-    const crew = await getCrew()
+    const crew = await getCrewMembers()
 
     // Check if we got valid data back
     if (!crew || crew.length === 0) {
