@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import type { MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from '@remix-run/react'
 import OptimizedBackground from '~/components/shared/OptimizedBackground'
 import { getCrew } from '~/utils/data.server'
-import type { CrewMember } from '~/types/crew'
 import ErrorBoundaryComponent from '~/components/shared/ErrorBoundary'
 
 export const meta: MetaFunction = () => [
@@ -14,8 +13,11 @@ export const meta: MetaFunction = () => [
 
 export async function loader() {
   try {
-    const crew = getCrew()
+    // SUPABASE VERSION: getCrew() now returns a Promise that resolves to an array of crew members
+    // We need to await the result since we're getting data from a database now
+    const crew = await getCrew()
 
+    // Check if we got valid data back
     if (!crew || crew.length === 0) {
       throw new Response('Crew data not found', { status: 404 })
     }
@@ -28,28 +30,81 @@ export async function loader() {
 }
 
 export default function CrewPage() {
+  // The data structure stays the same, but now it's coming from Supabase
   const { crew } = useLoaderData<typeof loader>()
-  const [currentCrewIndex, setCurrentCrewIndex] = React.useState(0)
-  const [isTransitioning, setIsTransitioning] = React.useState(false)
-  const [imageError, setImageError] = React.useState(false)
+
+  // Initialize state with first crew member (same as before)
+  const [currentCrewIndex, setCurrentCrewIndex] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [imageError, setImageError] = useState(false)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null)
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50
+
+  // Get the current crew member from the array
   const currentCrewMember = crew[currentCrewIndex]
 
+  // The rest of the component remains the same
   const handleCrewChange = (index: number) => {
     if (index === currentCrewIndex) return
+    const direction = index > currentCrewIndex ? 'left' : 'right'
+    setSlideDirection(direction)
     setIsTransitioning(true)
     setImageError(false)
     setTimeout(() => {
       setCurrentCrewIndex(index)
       setIsTransitioning(false)
-    }, 150)
+      setSlideDirection(null)
+    }, 300)
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe && currentCrewIndex < crew.length - 1) {
+      handleCrewChange(currentCrewIndex + 1)
+    }
+
+    if (isRightSwipe && currentCrewIndex > 0) {
+      handleCrewChange(currentCrewIndex - 1)
+    }
   }
 
   const handleImageError = () => {
     setImageError(true)
   }
 
+  const getSlideAnimation = () => {
+    if (!slideDirection) return ''
+    if (isTransitioning) {
+      return slideDirection === 'left' ? 'translate-x-full opacity-0' : '-translate-x-full opacity-0'
+    }
+    return 'translate-x-0 opacity-100'
+  }
+
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-[#0B0D17]">
+    <main
+      className="relative min-h-screen w-full overflow-hidden bg-[#0B0D17]"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Background Image */}
       <OptimizedBackground
         mobileImage={{
@@ -85,9 +140,7 @@ export default function CrewPage() {
         <div className="flex flex-col md:flex-col lg:flex-row lg:items-end max-w-[1440px] mx-auto">
           {/* Content Section */}
           <article className="order-2 md:order-1 lg:order-1 text-center md:text-center lg:text-left lg:flex lg:flex-col lg:gap-12 lg:justify-between lg:h-full mt-8 md:mt-14 lg:mt-0">
-            <div
-              className={`transition-opacity duration-300 ease-in-out ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
-            >
+            <div className={`transform transition-all duration-300 ease-in-out ${getSlideAnimation()}`}>
               {/* Role */}
               <h2 className="font-bellefair text-base md:text-[1.5rem] lg:text-[2rem] text-white opacity-50 uppercase mb-2 md:mb-4">
                 {currentCrewMember.role}
@@ -129,18 +182,16 @@ export default function CrewPage() {
               <div className="relative w-full flex items-end justify-center">
                 {!imageError ? (
                   <img
+                    // Note: If your Supabase data structure is different from your original data,
+                    // you might need to adjust these image paths
                     src={currentCrewMember.images.webp}
                     alt={`${currentCrewMember.name}, ${currentCrewMember.role}`}
                     onError={handleImageError}
-                    className={`w-[20.4375rem] md:mt-10 md:w-[28.52313rem] lg:w-[35.50438rem] h-[13.875rem] md:h-[33rem] lg:h-[40.875rem] object-contain object-bottom transition-opacity duration-300 ease-in-out ${
-                      isTransitioning ? 'opacity-0' : 'opacity-100'
-                    }`}
+                    className={`w-[20.4375rem] md:mt-10 md:w-[28.52313rem] lg:w-[35.50438rem] h-[13.875rem] md:h-[33rem] lg:h-[40.875rem] object-contain object-bottom transform transition-all duration-300 ease-in-out ${getSlideAnimation()}`}
                   />
                 ) : (
                   <div
-                    className={`w-[20.4375rem] md:mt-10 md:w-[28.52313rem] lg:w-[35.50438rem] h-[13.875rem] md:h-[33rem] lg:h-[40.875rem] flex items-center justify-center text-white bg-[#38394f]/40 rounded-lg ${
-                      isTransitioning ? 'opacity-0' : 'opacity-100'
-                    }`}
+                    className={`w-[20.4375rem] md:mt-10 md:w-[28.52313rem] lg:w-[35.50438rem] h-[13.875rem] md:h-[33rem] lg:h-[40.875rem] flex items-center justify-center text-white bg-[#38394f]/40 rounded-lg transform transition-all duration-300 ease-in-out ${getSlideAnimation()}`}
                   >
                     <p className="text-center p-4">Image not available</p>
                   </div>

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a Remix-based space tourism website that implements a multi-page experience following the Frontend Mentor challenge specifications. The project uses TypeScript, Tailwind CSS, and modern web optimization techniques with a focus on responsive design, accessibility, and semantic HTML.
+This is a Remix-based space tourism website that implements a multi-page experience following the Frontend Mentor challenge specifications. The project uses TypeScript, Tailwind CSS, Supabase for data storage, and modern web optimization techniques with a focus on responsive design, accessibility, and semantic HTML.
 
 ## Directory Structure
 
@@ -38,7 +38,8 @@ project-root/
 │   │   ├── destination.ts # Destination type definitions
 │   │   └── technology.ts  # Technology type definitions
 │   ├── utils/             # Utility functions
-│   │   └── data.server.ts # Server-side data handling
+│   │   ├── data.server.ts # Server-side data handling
+│   │   └── supabase.ts    # Supabase client configuration
 │   ├── entry.client.tsx   # Client entry point for hydration
 │   ├── entry.server.tsx   # Server entry point for SSR
 │   └── root.tsx           # Root component with global providers
@@ -51,6 +52,8 @@ project-root/
 │       ├── background-technology-*.webp    # Background images for each breakpoint
 │       ├── image-*-portrait.webp           # Portrait orientation images (desktop)
 │       └── image-*-landscape.webp          # Landscape orientation images (mobile/tablet)
+├── .env                   # Environment variables (not tracked in Git)
+├── .env.example           # Example environment variables file (tracked in Git)
 └── package.json           # Project dependencies and scripts
 ```
 
@@ -72,19 +75,34 @@ This structure allows for:
 
 ### 2. Data Management
 
-- **Data Source**: Content comes from static JSON data loaded server-side
+- **Data Source**: Content comes from Supabase database
+- **Supabase Integration**:
+
+  ```typescript
+  // utils/supabase.ts
+  import { createClient } from '@supabase/supabase-js'
+
+  export const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
+  ```
+
 - **Data Access**:
 
   ```typescript
   // utils/data.server.ts
-  export function getCrew() {
-    return crew
+  import { supabase } from './supabase'
+
+  export async function getCrew() {
+    const { data, error } = await supabase.from('crew').select('*')
+
+    if (error) throw error
+    return data
   }
 
   // route.tsx
   export async function loader() {
     try {
-      const crew = getCrew()
+      // SUPABASE VERSION: getCrew() now returns a Promise that resolves to an array of crew members
+      const crew = await getCrew()
 
       if (!crew || crew.length === 0) {
         throw new Response('Data not found', { status: 404 })

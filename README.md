@@ -15,6 +15,7 @@ This is my solution to the [Space tourism website challenge on Frontend Mentor](
 - **Modern UI**: Implementing the Figma design with pixel-perfect accuracy
 - **Accessibility**: Semantic HTML structure and ARIA attributes for screen readers
 - **Performance Optimized**: Image optimization and responsive loading strategies
+- **Database Integration**: Data stored and retrieved from Supabase
 
 ## Built with
 
@@ -22,6 +23,7 @@ This is my solution to the [Space tourism website challenge on Frontend Mentor](
 - [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [React](https://reactjs.org/) - JavaScript library for user interfaces
+- [Supabase](https://supabase.com/) - Open source Firebase alternative
 - Semantic HTML5 markup
 - CSS Flexbox and Grid
 - Mobile-first workflow
@@ -36,8 +38,10 @@ project-root/
 │   ├── components/         # Shared components
 │   ├── routes/             # Remix routes for each page
 │   ├── types/              # TypeScript interfaces
-│   └── utils/              # Helper functions
+│   ├── utils/              # Helper functions
+│   │   └── supabase.ts     # Supabase client configuration
 ├── public/                 # Static assets
+├── .env                    # Environment variables (not tracked in Git)
 └── ...
 ```
 
@@ -66,6 +70,7 @@ For a detailed explanation of the project structure, see [PROJECT_STRUCTURE.md](
 ### Prerequisites
 
 - Node.js v14+ and npm
+- Supabase account for database access
 
 ### Installation
 
@@ -82,13 +87,22 @@ For a detailed explanation of the project structure, see [PROJECT_STRUCTURE.md](
    npm install
    ```
 
-3. Start the development server
+3. Set up environment variables
+
+   Create a `.env` file in the root directory with the following variables:
+
+   ```
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. Start the development server
 
    ```bash
    npm run dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser
+5. Open [http://localhost:3000](http://localhost:3000) to view it in the browser
 
 ### Building for production
 
@@ -109,6 +123,12 @@ npm run build
 - Reusable components for common UI elements
 - Shared background image component with responsive options
 - Error boundary components for graceful error handling
+
+### Data Management
+
+- Supabase integration for database storage and retrieval
+- Environment variables for secure credential management
+- Asynchronous data fetching patterns
 
 ### Navigation Patterns
 
@@ -132,6 +152,7 @@ This project provided valuable experience in:
 - Creating accessible navigation patterns
 - Handling image optimization for different screen sizes
 - Structuring a Remix project for scalability and maintainability
+- Integrating Supabase for database functionality
 
 ## Future Enhancements
 
@@ -139,6 +160,7 @@ This project provided valuable experience in:
 - Implement a dark/light mode toggle
 - Add unit and integration tests
 - Improve performance with advanced image optimization techniques
+- Enhance database schema with additional content types
 
 ## Author
 
@@ -149,6 +171,7 @@ This project provided valuable experience in:
 
 - [Frontend Mentor](https://www.frontendmentor.io) for providing the challenge
 - [Remix](https://remix.run/) team for the amazing framework
+- [Supabase](https://supabase.com/) for the powerful database platform
 
 ---
 

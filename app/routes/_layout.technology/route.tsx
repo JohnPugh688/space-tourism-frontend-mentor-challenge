@@ -3,7 +3,7 @@ import type { MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from '@remix-run/react'
 import OptimizedBackground from '~/components/shared/OptimizedBackground'
-import { getTechnology } from '~/utils/data.server'
+import { getTechnologies } from '~/utils/data.server'
 import type { Technology } from '~/types/technology'
 
 export const meta: MetaFunction = () => [
@@ -13,6 +13,19 @@ export const meta: MetaFunction = () => [
 
 export async function loader() {
   try {
+    // SUPABASE VERSION: getTechnologies() now returns a Promise that resolves to technology data
+    // We need to await the result since we're getting data from a database now
+    const technology = await getTechnologies()
+
+    // Check if we got valid data back
+    if (!technology || technology.length === 0) {
+      throw new Response('Technology data not found', { status: 404 })
+    }
+
+    return json({ technology })
+
+    // OLD VERSION (Static data):
+    /*
     const technology = getTechnology()
 
     if (!technology || technology.length === 0) {
@@ -20,6 +33,7 @@ export async function loader() {
     }
 
     return json({ technology })
+    */
   } catch (error) {
     console.error('Error loading technology data:', error)
     throw new Response('Error loading technology data', { status: 500 })
@@ -27,7 +41,10 @@ export async function loader() {
 }
 
 export default function TechnologyPage() {
+  // The data structure stays the same, but now it's coming from Supabase
   const { technology: techItems } = useLoaderData<typeof loader>()
+
+  // Initialize state with first technology item (same as before)
   const [currentTechIndex, setCurrentTechIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [displayedTech, setDisplayedTech] = useState(techItems[0])

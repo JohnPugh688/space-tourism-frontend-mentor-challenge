@@ -14,7 +14,7 @@ export const links: LinksFunction = () => [
 ]
 
 export const meta: MetaFunction = () => [
-  { name: 'viewport', content: 'width=device-width,initial-scale=1', key: 'viewport' },
+  { name: 'viewport', content: 'width=device-width, initial-scale=1', key: 'viewport' },
   { charSet: 'utf-8', key: 'charset' },
 ]
 
@@ -25,7 +25,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
+      <body className="h-full overflow-x-hidden">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
@@ -43,7 +43,7 @@ export function ErrorBoundary() {
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
+      <body className="h-full overflow-x-hidden">
         <div className="flex h-full items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-white">Oops!</h1>

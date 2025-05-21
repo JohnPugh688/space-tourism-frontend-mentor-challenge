@@ -29,17 +29,17 @@ export default function HomePage() {
       />
 
       {/* Content */}
-      <div className="relative lg:w-[90%] mx-auto max-w-[108rem] pt-[88px] md:pt-[202px] lg:pt-[23rem]">
-        <div className="mx-auto px-6 lg:w-full md:px-24 flex flex-col lg:flex-row items-center lg:items-end lg:justify-between">
+      <div className="relative w-full lg:w-[90%] mx-auto max-w-[108rem] pt-[88px] md:pt-[202px] lg:pt-[23rem]">
+        <div className="w-full mx-auto px-6 lg:w-full md:px-24 flex flex-col lg:flex-row items-center lg:items-end lg:justify-between">
           {/* Text content */}
-          <article className="text-center lg:text-left max-w-[450px]">
-            <h1 className="font-barlow-condensed text-[#D0D6F9] text-base md:text-xl lg:text-[28px] tracking-[2.7px] md:tracking-[3.38px] lg:tracking-[4.72px] uppercase">
+          <article className="w-full text-center lg:text-left max-w-[450px]">
+            <h1 className="w-full font-barlow-condensed text-[#D0D6F9] text-base md:text-xl lg:text-[28px] tracking-[2.7px] md:tracking-[3.38px] lg:tracking-[4.72px] uppercase">
               So, you want to travel to
-              <span className="font-bellefair block text-white text-[80px] md:text-[150px] leading-[100px] md:leading-[150px] mt-4 md:mt-6">
+              <span className="w-full font-bellefair block text-white text-[80px] md:text-[150px] leading-[100px] md:leading-[150px] mt-4 md:mt-6">
                 Space
               </span>
             </h1>
-            <p className="font-barlow text-[#D0D6F9] text-[15px] md:text-base lg:text-[18px] leading-[25px] md:leading-[28px] lg:leading-[32px] mt-4 md:mt-6">
+            <p className="w-full font-barlow text-[#D0D6F9] text-[15px] md:text-base lg:text-[18px] leading-[25px] md:leading-[28px] lg:leading-[32px] mt-4 md:mt-6">
               Let's face it; if you want to go to space, you might as well genuinely go to outer space and not hover
               kind of on the edge of it. Well sit back, and relax because we'll give you a truly out of this world
               experience!

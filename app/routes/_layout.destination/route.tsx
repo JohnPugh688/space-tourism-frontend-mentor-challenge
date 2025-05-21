@@ -13,6 +13,19 @@ export const meta: MetaFunction = () => [
 
 export async function loader() {
   try {
+    // SUPABASE VERSION: getDestinations() now returns a Promise that resolves to an array of destinations
+    // We need to await the result since we're getting data from a database now
+    const destinations = await getDestinations()
+
+    // Check if we got valid data back
+    if (!destinations || destinations.length === 0) {
+      throw new Response('Destination data not found', { status: 404 })
+    }
+
+    return json({ destinations })
+
+    // OLD VERSION (Static data):
+    /*
     const destinations = getDestinations()
 
     if (!destinations || destinations.length === 0) {
@@ -20,6 +33,7 @@ export async function loader() {
     }
 
     return json({ destinations })
+    */
   } catch (error) {
     console.error('Error loading destination data:', error)
     throw new Response('Error loading destination data', { status: 500 })
@@ -27,11 +41,15 @@ export async function loader() {
 }
 
 export default function DestinationPage() {
+  // The data structure stays the same, but now it's coming from Supabase
   const { destinations } = useLoaderData<typeof loader>()
+
+  // Initialize state with first destination (same as before)
   const [currentDestination, setCurrentDestination] = useState(destinations[0])
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [imageError, setImageError] = useState(false)
 
+  // The rest of the component remains unchanged
   const handleDestinationChange = (destination: (typeof destinations)[0]) => {
     if (destination.name === currentDestination.name) return
     setIsTransitioning(true)
@@ -73,7 +91,7 @@ export default function DestinationPage() {
       <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 sm:px-8 md:px-16 lg:px-24 xl:px-40 pt-[88px] md:pt-[136px] lg:pt-[180px] xl:pt-[212px] transition-all duration-300">
         {/* Page Title */}
         <header>
-          <h1 className="font-barlow-condensed text-white text-base sm:text-lg md:text-xl lg:text-2xl xl:text-[28px] tracking-[2.7px] md:tracking-[3.38px] lg:tracking-[4.72px] uppercase transition-all duration-300">
+          <h1 className="font-barlow-condensed text-white text-center md:text-start text-base sm:text-lg md:text-xl lg:text-2xl xl:text-[28px] tracking-[2.7px] md:tracking-[3.38px] lg:tracking-[4.72px] uppercase transition-all duration-300">
             <span className="font-bold opacity-25 mr-4">01</span>
             Pick your destination
           </h1>
