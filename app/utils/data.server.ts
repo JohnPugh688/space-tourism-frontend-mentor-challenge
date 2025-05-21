@@ -3,19 +3,6 @@ import { supabase } from './supabase'
 import type { Destination } from '~/types/destination'
 import type { CrewMember } from '~/types/crew'
 import type { Technology } from '~/types/technology'
-import type { PostgrestResponse } from '@supabase/supabase-js'
-import type { PostgrestFilterBuilder } from '@supabase/postgrest-js'
-
-// Utility function to handle Supabase queries with timeout
-async function queryWithTimeout<T>(
-  query: PostgrestFilterBuilder<any, any, T[], any, unknown>,
-  timeoutMs = 5000,
-): Promise<PostgrestResponse<T>> {
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Database query timeout')), timeoutMs),
-  )
-  return Promise.race([query, timeoutPromise]) as Promise<PostgrestResponse<T>>
-}
 
 interface DestinationRow {
   name: string
@@ -45,7 +32,7 @@ interface TechnologyRow {
 
 export async function getDestinations() {
   try {
-    const { data, error } = await queryWithTimeout<DestinationRow>(supabase.from('destinations').select('*'))
+    const { data, error } = await supabase.from('destinations').select('*').throwOnError()
 
     if (error) {
       console.error('Supabase error:', error)
@@ -75,7 +62,7 @@ export async function getDestinations() {
 
 export async function getCrew() {
   try {
-    const { data, error } = await queryWithTimeout<CrewRow>(supabase.from('crew_members').select('*'))
+    const { data, error } = await supabase.from('crew_members').select('*').throwOnError()
 
     if (error) {
       console.error('Supabase error:', error)
@@ -104,7 +91,7 @@ export async function getCrew() {
 
 export async function getTechnologies() {
   try {
-    const { data, error } = await queryWithTimeout<TechnologyRow>(supabase.from('technologies').select('*'))
+    const { data, error } = await supabase.from('technologies').select('*').throwOnError()
 
     if (error) {
       console.error('Supabase error:', error)
