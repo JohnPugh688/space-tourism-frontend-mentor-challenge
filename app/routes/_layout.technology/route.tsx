@@ -5,6 +5,7 @@ import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from '@remix
 import OptimizedBackground from '~/components/shared/OptimizedBackground'
 import { getTechnologies } from '~/utils/data.server'
 import type { Technology } from '~/types/technology'
+import { useSwipeNavigation } from '~/hooks/useSwipeNavigation'
 
 export const meta: MetaFunction = () => [
   { title: 'Space Tourism - Technology', key: 'title' },
@@ -41,31 +42,23 @@ export async function loader() {
 }
 
 export default function TechnologyPage() {
-  // The data structure stays the same, but now it's coming from Supabase
-  const { technology: techItems } = useLoaderData<typeof loader>()
-
-  // Initialize state with first technology item (same as before)
-  const [currentTechIndex, setCurrentTechIndex] = useState(0)
-  const [isTransitioning, setIsTransitioning] = useState(false)
-  const [displayedTech, setDisplayedTech] = useState(techItems[0])
+  const { technology } = useLoaderData<typeof loader>()
+  const [currentTechIndex, setCurrentTechIndex] = React.useState(0)
+  const [isTransitioning, setIsTransitioning] = React.useState(false)
+  const [displayedTech, setDisplayedTech] = useState(technology[0])
   const [imageError, setImageError] = useState({ landscape: false, portrait: false })
+
+  const currentTechnology = technology[currentTechIndex]
 
   const handleTechChange = (index: number) => {
     if (index === currentTechIndex) return
-
     setIsTransitioning(true)
     setImageError({ landscape: false, portrait: false })
-
-    // Wait for fade out
     setTimeout(() => {
       setCurrentTechIndex(index)
-      setDisplayedTech(techItems[index])
-
-      // Start fade in
-      setTimeout(() => {
-        setIsTransitioning(false)
-      }, 50)
-    }, 300)
+      setDisplayedTech(technology[index])
+      setIsTransitioning(false)
+    }, 150)
   }
 
   const handleLandscapeImageError = () => {
@@ -76,8 +69,26 @@ export default function TechnologyPage() {
     setImageError((prev) => ({ ...prev, portrait: true }))
   }
 
+  const { onTouchStart, onTouchMove, onTouchEnd } = useSwipeNavigation({
+    onSwipeLeft: () => {
+      if (currentTechIndex < technology.length - 1) {
+        handleTechChange(currentTechIndex + 1)
+      }
+    },
+    onSwipeRight: () => {
+      if (currentTechIndex > 0) {
+        handleTechChange(currentTechIndex - 1)
+      }
+    },
+  })
+
   return (
-    <main className="relative min-h-screen w-full">
+    <main
+      className="relative min-h-screen w-full overflow-hidden bg-[#0B0D17] touch-pan-y"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <OptimizedBackground
@@ -139,12 +150,12 @@ export default function TechnologyPage() {
             aria-label="Technology Navigation"
           >
             <div className="flex flex-row lg:flex-col gap-4 lg:gap-8">
-              {[0, 1, 2].map((index) => (
+              {technology.map((tech, index) => (
                 <button
                   key={index}
                   type="button"
                   onClick={() => handleTechChange(index)}
-                  aria-label={`View ${techItems[index].name}`}
+                  aria-label={`View ${tech.name}`}
                   aria-current={index === currentTechIndex ? 'page' : undefined}
                   className={`w-10 h-10 md:w-[60px] md:h-[60px] lg:w-[80px] lg:h-[80px] 
                     rounded-full border cursor-pointer flex items-center justify-center

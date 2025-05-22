@@ -5,6 +5,7 @@ import type { MetaFunction } from '@remix-run/node'
 import { getDestinations } from '~/utils/data.server'
 import OptimizedImage from '~/components/shared/OptimizedImage'
 import OptimizedBackground from '~/components/shared/OptimizedBackground'
+import { useSwipeNavigation } from '~/hooks/useSwipeNavigation'
 
 export const meta: MetaFunction = () => [
   { title: 'Space Tourism - Destination', key: 'title' },
@@ -41,21 +42,19 @@ export async function loader() {
 }
 
 export default function DestinationPage() {
-  // The data structure stays the same, but now it's coming from Supabase
   const { destinations } = useLoaderData<typeof loader>()
-
-  // Initialize state with first destination (same as before)
-  const [currentDestination, setCurrentDestination] = useState(destinations[0])
+  const [currentDestinationIndex, setCurrentDestinationIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [imageError, setImageError] = useState(false)
 
-  // The rest of the component remains unchanged
-  const handleDestinationChange = (destination: (typeof destinations)[0]) => {
-    if (destination.name === currentDestination.name) return
+  const currentDestination = destinations[currentDestinationIndex]
+
+  const handleDestinationChange = (index: number) => {
+    if (index === currentDestinationIndex) return
     setIsTransitioning(true)
     setImageError(false)
     setTimeout(() => {
-      setCurrentDestination(destination)
+      setCurrentDestinationIndex(index)
       setTimeout(() => {
         setIsTransitioning(false)
       }, 50)
@@ -66,8 +65,26 @@ export default function DestinationPage() {
     setImageError(true)
   }
 
+  const { onTouchStart, onTouchMove, onTouchEnd } = useSwipeNavigation({
+    onSwipeLeft: () => {
+      if (currentDestinationIndex < destinations.length - 1) {
+        handleDestinationChange(currentDestinationIndex + 1)
+      }
+    },
+    onSwipeRight: () => {
+      if (currentDestinationIndex > 0) {
+        handleDestinationChange(currentDestinationIndex - 1)
+      }
+    },
+  })
+
   return (
-    <main className="relative min-h-screen w-full">
+    <main
+      className="relative min-h-screen w-full overflow-hidden bg-[#0B0D17] touch-pan-y"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {/* Background images - responsive */}
       <div className="fixed inset-0 z-0">
         <OptimizedBackground
@@ -127,17 +144,17 @@ export default function DestinationPage() {
             {/* Navigation */}
             <nav aria-label="Destination navigation">
               <ul className="flex justify-center lg:justify-start gap-6 sm:gap-7 md:gap-8 lg:gap-9 xl:gap-10 transition-all duration-300">
-                {destinations.map((destination) => (
+                {destinations.map((destination, index) => (
                   <li key={destination.name}>
                     <button
-                      onClick={() => handleDestinationChange(destination)}
+                      onClick={() => handleDestinationChange(index)}
                       className={`font-barlow-condensed text-sm sm:text-[15px] md:text-base tracking-[2.36px] md:tracking-[2.7px] pb-2 border-b-[3px] transition-all duration-300 cursor-pointer
                         ${
-                          currentDestination.name === destination.name
+                          index === currentDestinationIndex
                             ? 'text-white border-white'
                             : 'text-[#D0D6F9] border-transparent hover:border-white/50'
                         }`}
-                      aria-current={currentDestination.name === destination.name ? 'true' : 'false'}
+                      aria-current={index === currentDestinationIndex ? 'true' : 'false'}
                     >
                       {destination.name}
                     </button>

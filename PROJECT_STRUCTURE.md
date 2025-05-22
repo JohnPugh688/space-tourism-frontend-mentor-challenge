@@ -578,6 +578,7 @@ This project uses Tailwind CSS v4.1 with its simplified Vite plugin approach, el
    ```
 
 3. **Custom Theme Variables** (in `app/tailwind.css`):
+
    ```css
    @theme {
      --screen-xs: 375px; /* Custom screen breakpoint */

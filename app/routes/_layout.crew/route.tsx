@@ -5,6 +5,7 @@ import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from '@remix
 import OptimizedBackground from '~/components/shared/OptimizedBackground'
 import { getCrew } from '~/utils/data.server'
 import ErrorBoundaryComponent from '~/components/shared/ErrorBoundary'
+import { useSwipeNavigation } from '~/hooks/useSwipeNavigation'
 
 export const meta: MetaFunction = () => [
   { title: 'Space Tourism - Crew', key: 'title' },
@@ -30,18 +31,13 @@ export async function loader() {
 }
 
 export default function CrewPage() {
-  // The data structure stays the same, but now it's coming from Supabase
   const { crew } = useLoaderData<typeof loader>()
-
-  // Initialize state with first crew member (same as before)
   const [currentCrewIndex, setCurrentCrewIndex] = React.useState(0)
   const [isTransitioning, setIsTransitioning] = React.useState(false)
   const [imageError, setImageError] = React.useState(false)
 
-  // Get the current crew member from the array
   const currentCrewMember = crew[currentCrewIndex]
 
-  // The rest of the component remains the same
   const handleCrewChange = (index: number) => {
     if (index === currentCrewIndex) return
     setIsTransitioning(true)
@@ -52,12 +48,30 @@ export default function CrewPage() {
     }, 150)
   }
 
+  const { onTouchStart, onTouchMove, onTouchEnd } = useSwipeNavigation({
+    onSwipeLeft: () => {
+      if (currentCrewIndex < crew.length - 1) {
+        handleCrewChange(currentCrewIndex + 1)
+      }
+    },
+    onSwipeRight: () => {
+      if (currentCrewIndex > 0) {
+        handleCrewChange(currentCrewIndex - 1)
+      }
+    },
+  })
+
   const handleImageError = () => {
     setImageError(true)
   }
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-[#0B0D17]">
+    <main
+      className="relative min-h-screen w-full overflow-hidden bg-[#0B0D17] touch-pan-y"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {/* Background Image */}
       <OptimizedBackground
         mobileImage={{
