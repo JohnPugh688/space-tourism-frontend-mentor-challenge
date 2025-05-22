@@ -463,3 +463,168 @@ When updating the project in the future:
    - Implement proper error boundaries
 
 This structure ensures consistency, maintainability, and adherence to web best practices throughout the project.
+
+## Mobile Viewport Handling
+
+### Critical Viewport Issue Solution
+
+This project encountered a common but difficult-to-debug mobile viewport scaling issue where:
+
+- Mobile browsers defaulted to a 980px viewport width (desktop layout)
+- The content was then scaled down to fit smaller screens (typically with visualViewport.scale < 1)
+- This resulted in desktop layouts being displayed and scaled on mobile devices
+
+The solution is implemented in two parts:
+
+1. **Viewport Meta Tag Configuration** (in `app/root.tsx`):
+
+   ```tsx
+   export const meta: MetaFunction = () => [
+     {
+       name: 'viewport',
+       content: 'width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover',
+       key: 'viewport',
+     },
+     // ...other meta tags
+   ]
+   ```
+
+2. **Runtime Viewport Enforcement** (in `app/routes/_layout/route.tsx`):
+
+   ```tsx
+   // Force viewport to use actual device width
+   useEffect(() => {
+     // Force viewport meta tag to use actual device width
+     const meta = document.createElement('meta')
+     meta.name = 'viewport'
+     meta.content = 'width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover'
+
+     // Remove any existing viewport meta tags and add our new one
+     document.querySelectorAll('meta[name="viewport"]').forEach((el) => el.remove())
+     document.head.appendChild(meta)
+
+     // Try to prevent any default scaling
+     const styleElement = document.createElement('style')
+     styleElement.textContent = `
+       @viewport {
+         width: device-width;
+         zoom: 1.0;
+       }
+       
+       html, body {
+         min-width: initial !important;
+         min-height: initial !important;
+         max-width: 100vw !important;
+         overflow-x: hidden !important;
+         width: 100% !important;
+       }
+     `
+     document.head.appendChild(styleElement)
+
+     return () => {
+       styleElement.remove()
+     }
+   }, [])
+   ```
+
+### Why This Is Difficult to Detect
+
+This issue is particularly challenging in Remix (and other SPAs) for several reasons:
+
+1. **Meta Tag Handling**:
+
+   - Remix uses a declarative approach to meta tags with the `Meta` component
+   - During client-side navigation, meta tags can sometimes be overridden or not correctly updated
+
+2. **Browser Differences**:
+
+   - Mobile browsers have various default behaviors for viewport handling
+   - iOS Safari in particular often defaults to 980px width viewports regardless of meta tags
+
+3. **Client-Side Routing**:
+   - When routes change, the viewport meta settings may not be consistently reapplied
+
+If these viewport issues occur in the future:
+
+1. Use the `ViewportDebug` component to check if innerWidth and visualViewport dimensions match
+2. Look for visualViewport.scale values that aren't 1, indicating content scaling
+3. Implement the aggressive viewport enforcement approach shown above
+
+This solution ensures that mobile devices correctly use their native display size rather than desktop widths with scaling.
+
+## Tailwind CSS v4.1 Integration
+
+This project uses Tailwind CSS v4.1 with its simplified Vite plugin approach, eliminating the need for separate configuration files.
+
+### Streamlined Setup
+
+1. **Vite Plugin Configuration** (in `vite.config.ts`):
+
+   ```ts
+   import tailwindcss from '@tailwindcss/vite'
+
+   export default defineConfig({
+     plugins: [
+       // other plugins...
+       tailwindcss(),
+     ],
+   })
+   ```
+
+2. **CSS Import** (in `app/tailwind.css`):
+
+   ```css
+   @import 'tailwindcss';
+   ```
+
+3. **Custom Theme Variables** (in `app/tailwind.css`):
+   ```css
+   @theme {
+     --screen-xs: 375px; /* Custom screen breakpoint */
+     --color-white: #ffffff;
+     --color-black: #000000;
+     --color-dark: #0b0d17;
+     --color-accent: #d0d6f9;
+
+     /* Fonts */
+     --font-bellefair: 'Bellefair', serif;
+     --font-barlow: 'Barlow', sans-serif;
+     --font-barlow-condensed: 'Barlow Condensed', sans-serif;
+   }
+   ```
+
+### Benefits of This Approach
+
+- **Simplified Configuration**: No need for separate `tailwind.config.js` or PostCSS configuration files
+- **Direct CSS Control**: Custom values are defined directly in CSS using the `@theme` directive
+- **Faster Build Times**: The Vite plugin optimizes scanning and CSS generation
+- **Reduced Dependencies**: No need for PostCSS plugins or extra configuration
+
+### Using Custom Values
+
+Custom values defined in the `@theme` section can be accessed throughout the project:
+
+```css
+/* Example of using custom colors */
+.custom-element {
+  color: var(--color-accent);
+  font-family: var(--font-bellefair);
+}
+```
+
+Breakpoints defined with `--screen-*` are automatically available in responsive utilities:
+
+```html
+<div class="block xs:flex">
+  <!-- Uses the custom xs:375px breakpoint -->
+</div>
+```
+
+### Migration from Previous Versions
+
+When migrating from Tailwind CSS v3.x:
+
+1. Remove `tailwind.config.js` and PostCSS configuration files
+2. Move custom theme extensions to the `@theme` section in your CSS file
+3. Update your Vite configuration to use the simplified plugin syntax
+4. Make sure your CSS file imports Tailwind CSS with `@import "tailwindcss"`

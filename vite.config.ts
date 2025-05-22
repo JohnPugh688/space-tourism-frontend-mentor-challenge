@@ -15,9 +15,6 @@ export default defineConfig({
     tsconfigPaths(),
     tailwindcss(),
   ],
-  css: {
-    postcss: './postcss.config.js',
-  },
   server: {
     fs: {
       // Restrict files that could be served by Vite's dev server.  Accessing
@@ -28,5 +25,7 @@ export default defineConfig({
       // https://vitejs.dev/config/server-options.html#server-fs-allow
       allow: ['app', 'public'],
     },
+    host: '0.0.0.0', // Expose to all network interfaces
+    port: 5173, // Set explicit port
   },
 })

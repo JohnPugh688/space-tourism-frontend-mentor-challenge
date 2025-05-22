@@ -15,8 +15,8 @@ interface HeaderProps {
 
 export default function Header({ isMobileMenuOpen, onMobileMenuToggle }: HeaderProps) {
   return (
-    <header className="absolute top-0 left-0 w-full z-50">
-      <div className="relative flex items-center justify-between max-w-[108rem] mx-auto px-6 md:px-0 md:pl-6 py-8 md:py-0 lg:py-8">
+    <header className="absolute top-0 left-0 right-0 z-50">
+      <div className="flex items-center justify-between px-4 sm:px-6 md:px-0 md:pl-6 py-4 md:py-0 lg:py-8">
         {/* Logo */}
         <div className="flex items-center">
           <Logo />
@@ -26,15 +26,15 @@ export default function Header({ isMobileMenuOpen, onMobileMenuToggle }: HeaderP
         <div className="hidden lg:block h-[1px] bg-white/25 flex-1 ml-16 mr-[-2rem] z-20" />
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:block backdrop-blur-[81.55px] bg-white/[0.04] px-12 lg:px-[123px]">
-          <ul className="flex gap-9 lg:gap-12 h-24 items-center">
+        <nav className="hidden md:block backdrop-blur-[81.55px] bg-white/[0.04] px-6 lg:px-[123px]">
+          <ul className="flex gap-4 lg:gap-12 h-24 items-center">
             {navItems.map((item) => (
               <li key={item.to} className="relative group h-full flex items-center">
                 <NavLink
                   to={item.to}
                   prefetch="intent"
                   className={({ isActive }) =>
-                    `flex items-center gap-3 font-barlow-condensed text-white text-sm lg:text-base tracking-[2.36px] lg:tracking-[2.7px] h-full
+                    `flex items-center gap-2 lg:gap-3 font-barlow-condensed text-white text-sm lg:text-base tracking-[2.36px] lg:tracking-[2.7px] h-full
                     ${
                       isActive
                         ? 'border-b-[3px] border-white'
@@ -52,17 +52,19 @@ export default function Header({ isMobileMenuOpen, onMobileMenuToggle }: HeaderP
         </nav>
 
         {/* Mobile Menu Button */}
-        <button
-          className="md:hidden size-8 text-white flex items-center justify-center z-50"
-          onClick={() => onMobileMenuToggle(!isMobileMenuOpen)}
-          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-        >
-          <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21">
-            <g fill="#D0D6F9" fillRule="evenodd">
-              <path d="M0 0h24v3H0zM0 9h24v3H0zM0 18h24v3H0z" />
-            </g>
-          </svg>
-        </button>
+        <div className="block md:hidden">
+          <button
+            className="size-8 text-white flex items-center justify-center z-50"
+            onClick={() => onMobileMenuToggle(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21">
+              <g fill="#D0D6F9" fillRule="evenodd">
+                <path d="M0 0h24v3H0zM0 9h24v3H0zM0 18h24v3H0z" />
+              </g>
+            </svg>
+          </button>
+        </div>
       </div>
     </header>
   )

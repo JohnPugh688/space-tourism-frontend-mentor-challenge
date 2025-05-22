@@ -21,7 +21,7 @@ export default function OptimizedBackground({
   desktopImage,
 }: OptimizedBackgroundProps) {
   return (
-    <picture className={`absolute inset-0 ${className}`}>
+    <picture className={`absolute inset-0 w-full h-full overflow-hidden ${className}`}>
       {/* Desktop Image */}
       <source media="(min-width: 1024px)" srcSet={desktopImage.webp} type="image/webp" />
       <source media="(min-width: 1024px)" srcSet={desktopImage.fallback} type="image/jpeg" />
@@ -41,6 +41,7 @@ export default function OptimizedBackground({
         aria-hidden="true"
         loading="eager"
         decoding="async"
+        style={{ maxWidth: '100%', objectFit: 'cover' }}
       />
     </picture>
   )

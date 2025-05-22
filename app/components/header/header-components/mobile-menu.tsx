@@ -23,21 +23,46 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     }
   }, [navigation.state, onClose])
 
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+      document.body.style.top = `-${window.scrollY}px`
+    } else {
+      const scrollY = document.body.style.top
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+      document.body.style.top = ''
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+      }
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+      document.body.style.top = ''
+    }
+  }, [isOpen])
+
   return (
     <div
-      className={`fixed inset-0 z-50 transition-[visibility] duration-300
+      className={`fixed top-0 left-0 right-0 bottom-0 z-50 transition-[visibility] duration-300 md:hidden max-w-[100vw] max-h-[100vh]
         ${!isOpen ? 'pointer-events-none invisible' : 'visible'}`}
     >
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/25 transition-opacity duration-300
+        className={`fixed top-0 left-0 right-0 bottom-0 bg-black/25 transition-opacity duration-300 max-w-[100vw] max-h-[100vh]
           ${isOpen ? 'opacity-100' : 'opacity-0'}`}
         onClick={onClose}
       />
 
       {/* Menu panel */}
       <div
-        className={`fixed inset-y-0 right-0 w-[254px] transform transition-transform duration-300 ease-in-out
+        className={`fixed top-0 bottom-0 right-0 w-[254px] max-w-[80vw] transform transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="h-full backdrop-blur-2xl bg-white/[0.04]">

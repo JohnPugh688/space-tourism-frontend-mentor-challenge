@@ -2,10 +2,10 @@
 
 @import 'tailwindcss';
 
-/* ---------------------- */
-/*    Custom Properties   */
-/* ---------------------- */
+/* Define custom screens directly in CSS for Tailwind v4 */
 @theme {
+  --screen-xs: 375px; /* Extra small devices */
+
   /* Colors */
   --color-white: #ffffff;
   --color-black: #000000;
@@ -26,7 +26,9 @@
 /*       Utilities        */
 /* ---------------------- */
 @layer utilities {
-  /* Add any custom utilities here */
+  .debug * {
+    outline: 1px solid rgba(255, 0, 0, 0.2) !important;
+  }
 }
 
 /* ---------------------- */
@@ -66,6 +68,18 @@
 /*         Base           */
 /* ---------------------- */
 @layer base {
+  html,
+  body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     font-family: 'Barlow', sans-serif;
   }

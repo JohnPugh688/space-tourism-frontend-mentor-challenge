@@ -10,36 +10,38 @@ export const meta: MetaFunction = () => [
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-screen w-full overflow-hidden">
-      {/* Background images - responsive */}
-      <OptimizedBackground
-        mobileImage={{
-          webp: '/home/background-home-mobile.webp',
-          fallback: '/home/background-home-mobile.jpg',
-        }}
-        tabletImage={{
-          webp: '/home/background-home-tablet.webp',
-          fallback: '/home/background-home-tablet.jpg',
-        }}
-        desktopImage={{
-          webp: '/home/background-home-desktop.webp',
-          fallback: '/home/background-home-desktop.jpg',
-        }}
-        className="bg-cover bg-center bg-no-repeat min-h-screen"
-      />
+    <main className="relative min-h-screen w-full overflow-hidden bg-black">
+      <div className="absolute inset-0 w-full h-full overflow-hidden max-w-[100%]">
+        {/* Background images - responsive */}
+        <OptimizedBackground
+          mobileImage={{
+            webp: '/home/background-home-mobile.webp',
+            fallback: '/home/background-home-mobile.jpg',
+          }}
+          tabletImage={{
+            webp: '/home/background-home-tablet.webp',
+            fallback: '/home/background-home-tablet.jpg',
+          }}
+          desktopImage={{
+            webp: '/home/background-home-desktop.webp',
+            fallback: '/home/background-home-desktop.jpg',
+          }}
+          className="bg-cover bg-center bg-no-repeat"
+        />
+      </div>
 
       {/* Content */}
-      <div className="relative w-full lg:w-[90%] mx-auto max-w-[108rem] pt-[88px] md:pt-[202px] lg:pt-[23rem]">
-        <div className="w-full mx-auto px-6 lg:w-full md:px-24 flex flex-col lg:flex-row items-center lg:items-end lg:justify-between">
+      <div className="relative w-full mx-auto pt-[88px] md:pt-[202px] lg:pt-[23rem] max-w-[100%]">
+        <div className="w-full mx-auto px-4 sm:px-6 md:px-24 flex flex-col lg:flex-row items-center lg:items-end lg:justify-between">
           {/* Text content */}
-          <article className="w-full text-center lg:text-left max-w-[450px]">
-            <h1 className="w-full font-barlow-condensed text-[#D0D6F9] text-base md:text-xl lg:text-[28px] tracking-[2.7px] md:tracking-[3.38px] lg:tracking-[4.72px] uppercase">
+          <article className="w-full max-w-[450px] text-center lg:text-left">
+            <h1 className="font-barlow-condensed text-[#D0D6F9] text-sm sm:text-base md:text-xl lg:text-[28px] tracking-[2.7px] md:tracking-[3.38px] lg:tracking-[4.72px] uppercase">
               So, you want to travel to
-              <span className="w-full font-bellefair block text-white text-[80px] md:text-[150px] leading-[100px] md:leading-[150px] mt-4 md:mt-6">
+              <span className="font-bellefair block text-white text-[50px] xs:text-[80px] md:text-[150px] leading-[60px] xs:leading-[100px] md:leading-[150px] mt-2 sm:mt-4 md:mt-6">
                 Space
               </span>
             </h1>
-            <p className="w-full font-barlow text-[#D0D6F9] text-[15px] md:text-base lg:text-[18px] leading-[25px] md:leading-[28px] lg:leading-[32px] mt-4 md:mt-6">
+            <p className="font-barlow text-[#D0D6F9] text-[13px] xs:text-[15px] md:text-base lg:text-[18px] leading-[22px] xs:leading-[25px] md:leading-[28px] lg:leading-[32px] mt-4 md:mt-6">
               Let's face it; if you want to go to space, you might as well genuinely go to outer space and not hover
               kind of on the edge of it. Well sit back, and relax because we'll give you a truly out of this world
               experience!
@@ -47,10 +49,10 @@ export default function HomePage() {
           </article>
 
           {/* Explore button */}
-          <div className="mt-20 md:mt-32 lg:mt-0 lg:ml-auto">
+          <div className="mt-8 sm:mt-20 md:mt-32 lg:mt-0 lg:ml-auto">
             <Link to="/destination" className="group relative inline-block" aria-label="Explore space destinations">
-              <div className="w-[150px] md:w-[242px] lg:w-[274px] h-[150px] md:h-[242px] lg:h-[274px] rounded-full bg-white flex items-center justify-center">
-                <span className="font-bellefair text-[20px] md:text-[32px] text-[#0B0D17] tracking-[2px] uppercase flex items-center justify-center text-center leading-none">
+              <div className="w-[120px] xs:w-[150px] md:w-[242px] lg:w-[274px] h-[120px] xs:h-[150px] md:h-[242px] lg:h-[274px] rounded-full bg-white flex items-center justify-center">
+                <span className="font-bellefair text-[16px] xs:text-[20px] md:text-[32px] text-[#0B0D17] tracking-[2px] uppercase flex items-center justify-center text-center leading-none">
                   Explore
                 </span>
               </div>
