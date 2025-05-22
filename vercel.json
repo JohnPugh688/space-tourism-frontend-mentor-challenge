@@ -1,8 +1,8 @@
 {
-  "buildCommand": "remix vite:build",
+  "buildCommand": "npm run build",
   "framework": "remix",
   "installCommand": "npm install",
-  "devCommand": "remix vite:dev",
+  "devCommand": "npm run dev",
   "outputDirectory": "build",
   "regions": ["iad1"]
 }
