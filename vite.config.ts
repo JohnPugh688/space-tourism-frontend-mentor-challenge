@@ -3,11 +3,18 @@ import { installGlobals } from '@remix-run/node'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
+import { vercelPreset } from '@vercel/remix/vite'
 
 installGlobals()
 
 export default defineConfig({
-  plugins: [remix(), tsconfigPaths(), tailwindcss()],
+  plugins: [
+    remix({
+      presets: [vercelPreset()],
+    }),
+    tsconfigPaths(),
+    tailwindcss(),
+  ],
   css: {
     postcss: './postcss.config.js',
   },
