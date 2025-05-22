@@ -6,12 +6,17 @@ import type { Technology } from '~/types/technology'
 
 export async function getDestinations() {
   try {
+    console.log('Fetching destinations from Supabase...')
     const { data, error } = await supabase.from('destinations').select('*')
 
-    if (error) throw error
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
 
     // Transform data to match the expected format
     if (data && data.length > 0) {
+      console.log(`Found ${data.length} destinations`)
       return data.map((item) => ({
         name: item.name,
         description: item.description,
@@ -24,8 +29,10 @@ export async function getDestinations() {
       })) as Destination[]
     }
 
+    console.warn('No destinations found in Supabase')
     return [] as Destination[]
   } catch (error) {
+    console.error('Error in getDestinations:', error)
     throw error
   }
 }
