@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { json } from '@remix-run/node'
-import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from '@remix-run/react'
-import type { MetaFunction } from '@remix-run/node'
+import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from 'react-router'
+import type { MetaFunction } from 'react-router'
 import { getDestinations } from '~/utils/data.server'
 import OptimizedImage from '~/components/shared/OptimizedImage'
 import OptimizedBackground from '~/components/shared/OptimizedBackground'
@@ -14,30 +13,14 @@ export const meta: MetaFunction = () => [
 
 export async function loader() {
   try {
-    // SUPABASE VERSION: getDestinations() now returns a Promise that resolves to an array of destinations
-    // We need to await the result since we're getting data from a database now
     const destinations = await getDestinations()
-
-    // Check if we got valid data back
     if (!destinations || destinations.length === 0) {
-      throw new Response('Destination data not found', { status: 404 })
+      throw new Response('Destinations data not found', { status: 404 })
     }
-
-    return json({ destinations })
-
-    // OLD VERSION (Static data):
-    /*
-    const destinations = getDestinations()
-
-    if (!destinations || destinations.length === 0) {
-      throw new Response('Destination data not found', { status: 404 })
-    }
-
-    return json({ destinations })
-    */
+    return { destinations }
   } catch (error) {
-    console.error('Error loading destination data:', error)
-    throw new Response('Error loading destination data', { status: 500 })
+    console.error('Error loading destinations data:', error)
+    throw new Response('Error loading destinations data', { status: 500 })
   }
 }
 
@@ -119,10 +102,8 @@ export default function DestinationPage() {
           <figure className="w-[170px] sm:w-[220px] md:w-[300px] lg:w-[380px] xl:w-[445px] aspect-square transition-all duration-300">
             {!imageError ? (
               <OptimizedImage
-                webpSrc={currentDestination.images.webp}
-                fallbackSrc={currentDestination.images.png}
+                src={currentDestination.images.webp}
                 alt={`${currentDestination.name} planet`}
-                onError={handleImageError}
                 className={`w-full h-full object-contain animate-planet-spin transition-opacity duration-300 ${
                   isTransitioning ? 'opacity-0' : 'opacity-100'
                 }`}

@@ -1,11 +1,12 @@
 import React from 'react'
-import type { MetaFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from '@remix-run/react'
+import type { MetaFunction } from 'react-router'
+import { Link, useLoaderData, useRouteError } from 'react-router'
 import OptimizedBackground from '~/components/shared/OptimizedBackground'
 import { getCrew } from '~/utils/data.server'
 import ErrorBoundaryComponent from '~/components/shared/ErrorBoundary'
 import { useSwipeNavigation } from '~/hooks/useSwipeNavigation'
+import { useState } from 'react'
+import type { CrewMember } from '~/types/crew'
 
 export const meta: MetaFunction = () => [
   { title: 'Space Tourism - Crew', key: 'title' },
@@ -14,49 +15,44 @@ export const meta: MetaFunction = () => [
 
 export async function loader() {
   try {
-    // SUPABASE VERSION: getCrew() now returns a Promise that resolves to an array of crew members
-    // We need to await the result since we're getting data from a database now
     const crew = await getCrew()
-
-    // Check if we got valid data back
     if (!crew || crew.length === 0) {
       throw new Response('Crew data not found', { status: 404 })
     }
-
-    return json({ crew })
+    return { crew }
   } catch (error) {
     console.error('Error loading crew data:', error)
     throw new Response('Error loading crew data', { status: 500 })
   }
 }
 
-export default function CrewPage() {
+export default function Crew() {
   const { crew } = useLoaderData<typeof loader>()
-  const [currentCrewIndex, setCurrentCrewIndex] = React.useState(0)
+  const [selectedMember, setSelectedMember] = useState(0)
   const [isTransitioning, setIsTransitioning] = React.useState(false)
   const [imageError, setImageError] = React.useState(false)
 
-  const currentCrewMember = crew[currentCrewIndex]
+  const currentCrewMember = crew[selectedMember]
 
   const handleCrewChange = (index: number) => {
-    if (index === currentCrewIndex) return
+    if (index === selectedMember) return
     setIsTransitioning(true)
     setImageError(false)
     setTimeout(() => {
-      setCurrentCrewIndex(index)
+      setSelectedMember(index)
       setIsTransitioning(false)
     }, 150)
   }
 
   const { onTouchStart, onTouchMove, onTouchEnd } = useSwipeNavigation({
     onSwipeLeft: () => {
-      if (currentCrewIndex < crew.length - 1) {
-        handleCrewChange(currentCrewIndex + 1)
+      if (selectedMember < crew.length - 1) {
+        handleCrewChange(selectedMember + 1)
       }
     },
     onSwipeRight: () => {
-      if (currentCrewIndex > 0) {
-        handleCrewChange(currentCrewIndex - 1)
+      if (selectedMember > 0) {
+        handleCrewChange(selectedMember - 1)
       }
     },
   })
@@ -136,10 +132,10 @@ export default function CrewPage() {
                   key={index}
                   onClick={() => handleCrewChange(index)}
                   className={`w-[0.9375rem] h-[0.9375rem] rounded-full transition-opacity cursor-pointer ${
-                    index === currentCrewIndex ? 'bg-white' : 'bg-white opacity-[0.17] hover:opacity-50'
+                    index === selectedMember ? 'bg-white' : 'bg-white opacity-[0.17] hover:opacity-50'
                   }`}
                   aria-label={`View ${member.name}, ${member.role}`}
-                  aria-current={index === currentCrewIndex ? 'true' : 'false'}
+                  aria-current={index === selectedMember ? 'true' : 'false'}
                 />
               ))}
             </nav>
@@ -181,10 +177,10 @@ export default function CrewPage() {
                   key={index}
                   onClick={() => handleCrewChange(index)}
                   className={`w-[0.625rem] h-[0.625rem] rounded-full transition-opacity cursor-pointer ${
-                    index === currentCrewIndex ? 'bg-white' : 'bg-white opacity-[0.17] hover:opacity-50'
+                    index === selectedMember ? 'bg-white' : 'bg-white opacity-[0.17] hover:opacity-50'
                   }`}
                   aria-label={`View ${member.name}, ${member.role}`}
-                  aria-current={index === currentCrewIndex ? 'true' : 'false'}
+                  aria-current={index === selectedMember ? 'true' : 'false'}
                 />
               ))}
             </nav>

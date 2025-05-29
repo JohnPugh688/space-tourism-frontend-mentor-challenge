@@ -35,7 +35,7 @@ if (networkIPs.length > 0) {
 }
 
 // Start the development server
-const devProcess = spawn('remix', ['vite:dev'], {
+const devProcess = spawn('react-router', ['dev'], {
   stdio: 'inherit',
   shell: true,
 })

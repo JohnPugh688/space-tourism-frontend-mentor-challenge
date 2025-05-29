@@ -1,4 +1,4 @@
-import { isRouteErrorResponse, Link, useRouteError } from '@remix-run/react'
+import { isRouteErrorResponse, Link, useRouteError } from 'react-router';
 import OptimizedBackground from './OptimizedBackground'
 
 interface ErrorBoundaryProps {

@@ -1,631 +1,551 @@
-# Space Tourism Website - Remix Project Structure
+# Space Tourism Website - React Router 7 Project Structure
 
 ## Overview
 
-This is a Remix-based space tourism website that implements a multi-page experience following the Frontend Mentor challenge specifications. The project uses TypeScript, Tailwind CSS, Supabase for data storage, and modern web optimization techniques with a focus on responsive design, accessibility, and semantic HTML.
+This is a React Router 7-based space tourism website that implements a multi-page experience following the Frontend Mentor challenge specifications. The project has been migrated from Remix to React Router 7 (the official successor) and uses TypeScript, Tailwind CSS v4.1, Supabase for data storage, and modern web optimization techniques with a focus on responsive design, accessibility, and semantic HTML.
 
-## Directory Structure
+## Complete Project File Tree
 
 ```
-project-root/
-├── app/
-│   ├── components/         # Shared components
-│   │   ├── header/         # Header-related components including navigation
-│   │   │   ├── header.tsx  # Main header component
-│   │   │   └── header-components/ # Sub-components used in the header
-│   │   │       ├── logo.tsx            # Site logo with home link
-│   │   │       └── mobile-menu.tsx     # Mobile navigation menu
-│   │   └── shared/        # Global shared components
-│   │       ├── OptimizedImage.tsx      # Image optimization component
-│   │       ├── OptimizedBackground.tsx # Background image component
-│   │       └── ErrorBoundary.tsx       # Shared error boundary component
-│   ├── data/              # Data files and interfaces
-│   ├── routes/            # Application routes using Remix file-based routing
-│   │   ├── _layout/               # Base layout wrapper for all pages
-│   │   │   └── route.tsx          # Layout component with header and transitions
-│   │   ├── _layout._index/        # Homepage route
-│   │   │   └── index.tsx          # Home page component
-│   │   ├── _layout.destination/   # Destination page for planets
-│   │   │   └── route.tsx          # Destination component with tabs
-│   │   ├── _layout.crew/          # Crew page for team members
-│   │   │   └── route.tsx          # Crew component with dot pagination
-│   │   └── _layout.technology/    # Technology page with number navigation
-│   │       └── route.tsx          # Technology component with horizontal/vertical layouts
-│   ├── styles/            # Global styles
-│   ├── tailwind.css       # Tailwind config and custom styles
-│   ├── types/             # TypeScript type definitions
-│   │   ├── crew.ts        # Crew member type definitions
-│   │   ├── destination.ts # Destination type definitions
-│   │   └── technology.ts  # Technology type definitions
-│   ├── utils/             # Utility functions
-│   │   ├── data.server.ts # Server-side data handling
-│   │   └── supabase.ts    # Supabase client configuration
-│   ├── entry.client.tsx   # Client entry point for hydration
-│   ├── entry.server.tsx   # Server entry point for SSR
-│   └── root.tsx           # Root component with global providers
-├── public/                # Static assets
-│   ├── shared/            # Shared assets like logo
-│   ├── home/              # Home page specific assets
-│   ├── destination/       # Destination images and backgrounds
-│   ├── crew/              # Crew member images and backgrounds
-│   └── technology/        # Technology images and backgrounds
-│       ├── background-technology-*.webp    # Background images for each breakpoint
-│       ├── image-*-portrait.webp           # Portrait orientation images (desktop)
-│       └── image-*-landscape.webp          # Landscape orientation images (mobile/tablet)
-├── .env                   # Environment variables (not tracked in Git)
-├── .env.example           # Example environment variables file (tracked in Git)
-└── package.json           # Project dependencies and scripts
+space-tourism-project/
+├── 📁 .git/                           # Git version control
+├── 📁 .react-router/                  # Auto-generated React Router 7 types
+│   └── types/                         # Generated TypeScript definitions
+├── 📁 .vercel/                        # Vercel deployment configuration
+├── 📁 build/                          # Production build output
+│   ├── client/                        # Client-side assets
+│   └── server/                        # Server-side bundle
+├── 📁 node_modules/                   # Dependencies
+├── 📁 screenshots/                    # Project screenshots for documentation
+│
+├── 📁 app/                            # Main application source code
+│   ├── 📄 entry.client.tsx            # Client-side entry point (React Router 7)
+│   ├── 📄 entry.server.tsx            # Server-side entry point (React Router 7)
+│   ├── 📄 root.tsx                    # Root layout with providers
+│   ├── 📄 routes.ts                   # Route configuration (React Router 7)
+│   ├── 📄 tailwind.css                # Tailwind CSS v4.1 with custom theme
+│   ├── 📄 .gitignore                  # App-specific gitignore
+│   │
+│   ├── 📁 api/                        # API utilities (if needed)
+│   │
+│   ├── 📁 components/                 # Reusable UI components
+│   │   ├── 📁 auth/                   # Authentication components
+│   │   ├── 📁 header/                 # Header and navigation components
+│   │   ├── 📁 mission-control/        # Mission control specific components
+│   │   │   ├── 📄 AchievementBadge.tsx
+│   │   │   └── 📄 MissionCountdown.tsx
+│   │   └── 📁 shared/                 # Globally shared components
+│   │       ├── 📄 ErrorBoundary.tsx   # Reusable error boundary
+│   │       ├── 📄 OptimizedBackground.tsx # Responsive background images
+│   │       └── 📄 OptimizedImage.tsx  # Optimized image component
+│   │
+│   ├── 📁 context/                    # React Context providers
+│   │   └── 📄 AuthContext.tsx         # Authentication state management
+│   │
+│   ├── 📁 data/                       # Static data and type definitions
+│   │   └── 📄 index.ts                # Exported data arrays (crew, destinations, technology)
+│   │
+│   ├── 📁 hooks/                      # Custom React hooks
+│   │   └── 📄 useSwipeNavigation.ts   # Touch/swipe navigation hook
+│   │
+│   ├── 📁 routes/                     # React Router 7 file-based routing
+│   │   ├── 📄 auth.callback.tsx       # OAuth callback handler
+│   │   ├── 📄 auth.sync.tsx           # Session synchronization
+│   │   ├── 📁 _layout/                # Base layout wrapper
+│   │   │   └── 📄 route.tsx           # Layout component with header
+│   │   ├── 📁 _layout._index/         # Homepage (nested under layout)
+│   │   │   └── 📄 index.tsx           # Home page component
+│   │   ├── 📁 _layout.crew/           # Crew page
+│   │   │   └── 📄 route.tsx           # Crew members with dot navigation
+│   │   ├── 📁 _layout.destination/    # Destination page
+│   │   │   └── 📄 route.tsx           # Planets with tab navigation
+│   │   ├── 📁 _layout.mission-control/ # Protected mission control page
+│   │   │   └── 📄 route.tsx           # Dashboard with missions and achievements
+│   │   └── 📁 _layout.technology/     # Technology page
+│   │       └── 📄 route.tsx           # Technology with numbered navigation
+│   │
+│   ├── 📁 styles/                     # Additional stylesheets (if needed)
+│   │
+│   ├── 📁 types/                      # TypeScript type definitions
+│   │   ├── 📄 crew.ts                 # Crew member interfaces
+│   │   ├── 📄 destination.ts          # Destination interfaces
+│   │   └── 📄 technology.ts           # Technology interfaces
+│   │
+│   └── 📁 utils/                      # Utility functions
+│       ├── 📄 data.server.ts          # Server-side data fetching (Supabase)
+│       └── 📄 supabase.ts             # Supabase client configuration
+│
+├── 📁 public/                         # Static assets served directly
+│   ├── 📄 favicon.ico                 # Site favicon
+│   ├── 📁 crew/                       # Crew member images and backgrounds
+│   │   ├── 📄 background-crew-desktop.webp
+│   │   ├── 📄 background-crew-tablet.webp
+│   │   ├── 📄 background-crew-mobile.webp
+│   │   ├── 📄 image-douglas-hurley.webp
+│   │   ├── 📄 image-mark-shuttleworth.webp
+│   │   ├── 📄 image-victor-glover.webp
+│   │   └── 📄 image-anousheh-ansari.webp
+│   ├── 📁 destination/                # Planet images and backgrounds
+│   │   ├── 📄 background-destination-desktop.webp
+│   │   ├── 📄 background-destination-tablet.webp
+│   │   ├── 📄 background-destination-mobile.webp
+│   │   ├── 📄 image-moon.webp
+│   │   ├── 📄 image-mars.webp
+│   │   ├── 📄 image-europa.webp
+│   │   └── 📄 image-titan.webp
+│   ├── 📁 home/                       # Homepage assets
+│   │   ├── 📄 background-home-desktop.webp
+│   │   ├── 📄 background-home-tablet.webp
+│   │   └── 📄 background-home-mobile.webp
+│   ├── 📁 mission-control/            # Mission control assets
+│   │   └── 📄 8247194011_9461bbec30_4k.webp
+│   ├── 📁 shared/                     # Shared assets like logo
+│   │   └── 📄 logo.svg
+│   └── 📁 technology/                 # Technology images and backgrounds
+│       ├── 📄 background-technology-desktop.webp
+│       ├── 📄 background-technology-tablet.webp
+│       ├── 📄 background-technology-mobile.webp
+│       ├── 📄 image-launch-vehicle-portrait.webp
+│       ├── 📄 image-launch-vehicle-landscape.webp
+│       ├── 📄 image-spaceport-portrait.webp
+│       ├── 📄 image-spaceport-landscape.webp
+│       ├── 📄 image-space-capsule-portrait.webp
+│       └── 📄 image-space-capsule-landscape.webp
+│
+├── 📁 scripts/                        # Build and development scripts
+│   └── 📄 dev.js                      # Custom development server script
+│
+├── 📄 .DS_Store                       # macOS system file (should be gitignored)
+├── 📄 .eslintrc.cjs                   # ESLint configuration
+├── 📄 .gitignore                      # Git ignore rules
+├── 📄 .prettierrc                     # Prettier code formatting
+├── 📄 MISSION_CONTROL.md              # Mission control feature documentation
+├── 📄 package-lock.json               # Locked dependency versions
+├── 📄 package.json                    # Project dependencies and scripts
+├── 📄 PROJECT_STRUCTURE.md            # This file
+├── 📄 react-router.config.ts          # React Router 7 configuration
+├── 📄 README.md                       # Project overview and setup
+├── 📄 tsconfig.json                   # TypeScript configuration
+├── 📄 vercel.json                     # Vercel deployment settings
+└── 📄 vite.config.ts                  # Vite build configuration
 ```
 
-## Key Patterns and Architecture
+## React Router 7 Architecture
 
-### 1. Routing Structure
+### Key Changes from Remix
 
-The project uses Remix's file-based routing with a nested structure:
+1. **Framework Migration**: Moved from Remix 2.x to React Router 7 (official successor)
+2. **Simplified Configuration**: React Router 7 uses a more streamlined approach
+3. **Updated Dependencies**: All packages now use `@react-router/*` instead of `@remix-run/*`
+4. **Modern React**: Updated to React 19.1 with latest features
 
-- `_layout/route.tsx`: Base layout component that wraps all pages
-- `_layout._index/index.tsx`: Homepage component
-- `_layout.[page]/route.tsx`: Individual page routes (destination, crew, technology)
+### Core Configuration Files
 
-This structure allows for:
+#### `react-router.config.ts`
 
-- Shared layout across all pages
-- Clean page transitions
-- Consistent navigation state
+```typescript
+import type { Config } from '@react-router/dev/config'
 
-### 2. Data Management
+export default {
+  ssr: true,
+} satisfies Config
+```
 
-- **Data Source**: Content comes from Supabase database
-- **Supabase Integration**:
+#### `app/routes.ts`
 
-  ```typescript
-  // utils/supabase.ts
-  import { createClient } from '@supabase/supabase-js'
+```typescript
+import { type RouteConfig } from '@react-router/dev/routes'
+import { flatRoutes } from '@react-router/fs-routes'
 
-  export const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
-  ```
+export default flatRoutes() satisfies RouteConfig
+```
 
-- **Data Access**:
+#### `vite.config.ts`
 
-  ```typescript
-  // utils/data.server.ts
-  import { supabase } from './supabase'
+```typescript
+import { reactRouter } from '@react-router/dev/vite'
+import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
+import tailwindcss from '@tailwindcss/vite'
 
-  export async function getCrew() {
-    const { data, error } = await supabase.from('crew').select('*')
+export default defineConfig({
+  plugins: [reactRouter(), tsconfigPaths(), tailwindcss()],
+  // ... server config
+})
+```
 
+## Technology Stack
+
+### Core Framework
+
+- **React Router 7.0.0** - Latest stable version (successor to Remix)
+- **React 19.1.0** - Latest with new features:
+  - React Compiler (automatic memoization)
+  - Actions API for async operations
+  - useOptimistic hook for optimistic UI updates
+  - Enhanced form handling (useFormStatus, useActionState)
+  - Server Components improvements
+
+### Build Tools
+
+- **Vite 6.3.5** - Fast build tool and dev server
+- **TypeScript 5.8.3** - Type safety and developer experience
+- **Tailwind CSS 4.1.7** - Utility-first styling with simplified configuration
+
+### Backend & Data
+
+- **Supabase** - PostgreSQL database with real-time features
+- **@supabase/ssr** - Server-side rendering support
+- **@supabase/supabase-js** - JavaScript client library
+
+### Development Tools
+
+- **ESLint** - Code linting and quality
+- **Prettier** - Code formatting
+- **Vercel** - Deployment platform
+
+## Data Architecture
+
+### Supabase Integration (Primary Approach)
+
+This project uses **Supabase as the primary data source** for learning modern database integration patterns:
+
+```typescript
+// Server-side data fetching with error handling
+export async function getCrew() {
+  try {
+    const { data, error } = await supabase.from('crew_members').select('*')
     if (error) throw error
-    return data
+
+    // Transform data to match TypeScript interfaces
+    return data.map((item) => ({
+      name: item.name,
+      role: item.role,
+      bio: item.bio,
+      images: {
+        png: item.image_png || '',
+        webp: item.image_webp || '',
+      },
+    })) as CrewMember[]
+  } catch (error) {
+    throw error
   }
+}
 
-  // route.tsx
-  export async function loader() {
-    try {
-      // SUPABASE VERSION: getCrew() now returns a Promise that resolves to an array of crew members
-      const crew = await getCrew()
-
-      if (!crew || crew.length === 0) {
-        throw new Response('Data not found', { status: 404 })
-      }
-
-      return json({ crew })
-    } catch (error) {
-      console.error('Error loading data:', error)
-      throw new Response('Error loading data', { status: 500 })
+// Route loader with comprehensive error handling
+export async function loader() {
+  try {
+    const crew = await getCrew()
+    if (!crew || crew.length === 0) {
+      throw new Response('Crew data not found', { status: 404 })
     }
+    return { crew }
+  } catch (error) {
+    console.error('Error loading crew data:', error)
+    throw new Response('Error loading crew data', { status: 500 })
   }
-  ```
-
-- **Data Consumption**:
-  ```typescript
-  const { crew } = useLoaderData<typeof loader>()
-  ```
-- **Error Handling**: Each route implements error boundaries to handle data loading issues
-
-### 3. Component Patterns
-
-#### Shared Components
-
-1. **OptimizedBackground**:
-
-   ```typescript
-   <OptimizedBackground
-     mobileImage={{ webp: '/path/mobile.webp', fallback: '/path/mobile.jpg' }}
-     tabletImage={{ webp: '/path/tablet.webp', fallback: '/path/tablet.jpg' }}
-     desktopImage={{ webp: '/path/desktop.webp', fallback: '/path/desktop.jpg' }}
-     className="bg-cover bg-center bg-no-repeat min-h-screen opacity-25 mix-blend-screen"
-   />
-   ```
-
-2. **OptimizedImage**:
-
-   ```typescript
-   <OptimizedImage
-     webpSrc="/path/image.webp"
-     fallbackSrc="/path/image.png"
-     alt="Description"
-     priority={true}
-     onError={handleImageError}
-     className="w-full max-w-[445px]"
-   />
-   ```
-
-3. **ErrorBoundary**:
-   ```typescript
-   <ErrorBoundaryComponent
-     defaultHeading="Custom Error Title"
-     defaultMessage="Custom error message for this page."
-     backgroundImages={{
-       mobile: { webp: '/path/mobile.webp', fallback: '/path/mobile.jpg' },
-       tablet: { webp: '/path/tablet.webp', fallback: '/path/tablet.jpg' },
-       desktop: { webp: '/path/desktop.webp', fallback: '/path/desktop.jpg' },
-     }}
-   />
-   ```
-
-#### Page Structure Pattern
-
-Each page follows this semantic structure:
-
-```html
-<main>
-  <!-- Background -->
-  <OptimizedBackground />
-
-  <div className="container">
-    <!-- Page Title -->
-    <header>
-      <h1><span>01</span> Page Title</h1>
-    </header>
-
-    <!-- Content -->
-    <div className="content-layout">
-      <!-- Left Content Section -->
-      <article>
-        <h2>Content Title</h2>
-        <p>Description</p>
-      </article>
-
-      <!-- Right/Visual Section -->
-      <figure className="visual-section">
-        <img />
-      </figure>
-
-      <!-- Navigation Elements -->
-      <nav aria-label="Section Navigation">
-        <!-- Navigation Items -->
-      </nav>
-    </div>
-  </div>
-</main>
+}
 ```
 
-### 4. Responsive Design System
+### Database Schema
 
-#### Breakpoints
+The Supabase database includes these tables:
+
+- **`destinations`** - Planet information with images and travel details
+- **`crew_members`** - Astronaut profiles with roles and biographies
+- **`technologies`** - Space technology with descriptions and images
+
+### Static Data (Fallback/Development)
+
+Static data is available in `app/data/index.ts` for:
+
+- Development without database connection
+- Fallback when Supabase is unavailable
+- Type reference and data structure examples
+
+```typescript
+export const destinations: Destination[] = [
+  { name: 'MOON', images: {...}, description: '...', distance: '...', travel: '...' },
+  // ... more destinations
+]
+```
+
+## Component Patterns
+
+### Shared Components
+
+#### OptimizedBackground
+
+```typescript
+<OptimizedBackground
+  mobileImage={{ webp: '/path/mobile.webp', fallback: '/path/mobile.jpg' }}
+  tabletImage={{ webp: '/path/tablet.webp', fallback: '/path/tablet.jpg' }}
+  desktopImage={{ webp: '/path/desktop.webp', fallback: '/path/desktop.jpg' }}
+  className="bg-cover bg-center bg-no-repeat min-h-screen opacity-25"
+/>
+```
+
+#### OptimizedImage
+
+```typescript
+<OptimizedImage
+  webpSrc="/path/image.webp"
+  fallbackSrc="/path/image.png"
+  alt="Description"
+  priority={true}
+  className="w-full max-w-[445px]"
+/>
+```
+
+### Page Structure Pattern
+
+```typescript
+export default function PageComponent() {
+  const { data } = useLoaderData<typeof loader>()
+
+  return (
+    <main className="relative min-h-screen w-full overflow-hidden bg-[#0B0D17]">
+      <OptimizedBackground {...backgroundProps} />
+
+      <div className="relative w-full mx-auto max-w-[108rem] px-6 md:px-10 lg:px-40 pt-24 md:pt-36 lg:pt-48">
+        <header>
+          <h1>
+            <span>01</span> Page Title
+          </h1>
+        </header>
+
+        <div className="content-layout">
+          <article>{/* Content */}</article>
+          <figure>{/* Visual */}</figure>
+          <nav>{/* Navigation */}</nav>
+        </div>
+      </div>
+    </main>
+  )
+}
+```
+
+## Tailwind CSS v4.1 Integration
+
+### Simplified Configuration
+
+```css
+/* app/tailwind.css */
+@import 'tailwindcss';
+
+@theme {
+  --screen-xs: 375px;
+  --color-dark: #0b0d17;
+  --color-accent: #d0d6f9;
+  --font-bellefair: 'Bellefair', serif;
+  --font-barlow: 'Barlow', sans-serif;
+  --font-barlow-condensed: 'Barlow Condensed', sans-serif;
+}
+```
+
+### Benefits
+
+- No separate `tailwind.config.js` needed
+- Direct CSS control with `@theme` directive
+- Faster build times with Vite plugin
+- Reduced configuration complexity
+
+## Responsive Design System
+
+### Breakpoints
 
 - **Mobile**: Base styles (< 768px)
 - **Tablet**: `md:` prefix (≥ 768px)
 - **Desktop**: `lg:` prefix (≥ 1024px)
-- **Extra Large**: `xl:` prefix (≥ 1280px) - Used sparingly
+- **Extra Large**: `xl:` prefix (≥ 1280px)
 
-#### Container Widths
-
-- **Max Width**: `max-w-[108rem]` (1728px) for overall containers
-- **Content Areas**:
-  - Mobile: `px-6` (24px padding)
-  - Tablet: `md:px-10` (40px padding)
-  - Desktop: `lg:px-40` (160px padding)
-
-#### Spacing Scale
+### Container Pattern
 
 ```css
-/* Vertical Spacing Pattern */
-pt-24 md:pt-36 lg:pt-48  /* Page top padding pattern */
-gap-4 md:gap-6 lg:gap-8  /* Common spacing pattern */
-mb-8 md:mb-14 lg:mb-0    /* Margin bottom pattern */
+/* Consistent spacing across breakpoints */
+px-6 md:px-10 lg:px-40          /* Horizontal padding */
+pt-24 md:pt-36 lg:pt-48         /* Top padding */
+gap-4 md:gap-6 lg:gap-8         /* Element spacing */
 ```
 
-### 5. Typography System
-
-#### Font Families
-
-- **Headers**: `font-bellefair` (Bellefair)
-- **Navigation/Labels**: `font-barlow-condensed` (Barlow Condensed)
-- **Body Text**: `font-barlow` (Barlow)
-
-#### Type Scale
+### Typography Scale
 
 ```css
-/* Heading Scale */
-text-[80px] md:text-[150px]              /* Main headings */
-text-[40px] md:text-[80px] lg:text-[100px] /* Sub headings */
-text-2xl md:text-[40px] lg:text-[56px]    /* Section headings */
+/* Heading hierarchy */
+text-[80px] md:text-[150px]                    /* Hero headings */
+text-[40px] md:text-[80px] lg:text-[100px]     /* Page headings */
+text-2xl md:text-[40px] lg:text-[56px]         /* Section headings */
 
-/* Body Text Scale */
-text-[15px] md:text-base lg:text-[18px]   /* Body text */
-leading-6 md:leading-7 lg:leading-[32px]  /* Line heights */
-
-/* Letter Spacing */
-tracking-[2.7px] md:tracking-[3.38px] lg:tracking-[4.725px] /* Label tracking */
+/* Body text */
+text-[15px] md:text-base lg:text-[18px]        /* Body text */
+leading-6 md:leading-7 lg:leading-[32px]       /* Line heights */
 ```
 
-### 6. Color System
+## Suggestions for Simplification
 
-```css
-/* Main Colors */
-bg-[#0B0D17]  /* Background/Dark */
-text-white    /* Primary text */
-text-[#D0D6F9] /* Secondary text */
-bg-[#383B4B]  /* Dividers/Borders */
+### 1. Enhance Supabase Learning
 
-/* Opacity Variants */
-opacity-25    /* Used for numbering */
-opacity-[0.17] /* Used for inactive states */
-bg-white/10   /* Background overlays */
-```
+**Current Strength**: Full Supabase integration with proper error handling
 
-### 7. Interactive Patterns
-
-#### Navigation States
-
-- **Default**: `text-[#D0D6F9] border-transparent`
-- **Hover**: `hover:border-white/50` or `hover:opacity-50`
-- **Active**: `text-white border-white` or `bg-white`
-
-#### Dots Navigation (Crew Page)
-
-```html
-<nav aria-label="Crew member navigation">
-  {crew.map((member, index) => ( <button key={index} onClick={() => handleCrewChange(index)} className={`w-[0.9375rem]
-  h-[0.9375rem] rounded-full transition-opacity ${ index === currentIndex ? 'bg-white' : 'bg-white opacity-[0.17]
-  hover:opacity-50' }`} aria-label={`View ${member.name}, ${member.role}`} aria-current={index === currentIndex ? 'true'
-  : 'false'} /> ))}
-</nav>
-```
-
-#### Numbers Navigation (Technology Page)
-
-```html
-<nav aria-label="Technology Navigation">
-  {[0, 1, 2].map((index) => (
-    <button
-      key={index}
-      onClick={() => handleChange(index)}
-      aria-current={index === currentIndex ? 'true' : 'false'}
-      className={`rounded-full border ${
-        index === currentIndex
-          ? 'bg-white text-[#0B0D17] border-white'
-          : 'text-white border-white/25 hover:border-white hover:bg-white/10'
-      }`}
-    >
-      {index + 1}
-    </button>
-  ))}
-</nav>
-```
-
-#### Tabs Navigation (Destination Page)
-
-```html
-<nav aria-label="Destination navigation">
-  <ul className="flex justify-center lg:justify-start gap-6 md:gap-8">
-    {destinations.map((destination) => (
-      <li key={destination.name}>
-        <button
-          onClick={() => handleDestinationChange(destination)}
-          className={`pb-2 border-b-[3px] transition-all ${
-            currentDestination.name === destination.name
-              ? 'text-white border-white'
-              : 'text-[#D0D6F9] border-transparent hover:border-white/50'
-          }`}
-          aria-current={currentDestination.name === destination.name ? 'true' : 'false'}
-        >
-          {destination.name}
-        </button>
-      </li>
-    ))}
-  </ul>
-</nav>
-```
-
-### 8. Page-Specific Layouts
-
-#### Home Page
-
-- Large "Explore" button in circle shape
-- Hover effect with scaling background ring
-- Content on left, button on right for desktop
-- Vertical stacking for mobile/tablet
-
-#### Destination Page
-
-- Planet image on top for mobile/tablet, left for desktop
-- Tab navigation for switching planets
-- Stats displayed in two columns (desktop) or stack (mobile)
-
-#### Crew Page
-
-- Image at bottom for mobile, top-right for desktop
-- Dot navigation for switching crew members
-- Role and name hierarchy with bio text
-- Border line below image on mobile only
-
-#### Technology Page
-
-- Landscape image at top for mobile/tablet
-- Portrait image at right for desktop
-- Numbered horizontal navigation for mobile/tablet
-- Numbered vertical navigation for desktop
-- Max image width of 34.375rem (550px)
-
-### 9. Error Handling
-
-- Each route implements error boundaries
-- Shared ErrorBoundary component for consistent styling
-- Different error messages based on error type (404, 500)
-- Proper handling of data loading errors
-- Image error fallbacks for missing images
-
-### 10. Accessibility Features
-
-- Semantic HTML structure (`<main>`, `<nav>`, `<article>`, etc.)
-- ARIA attributes for interactive elements
-- Proper heading hierarchy
-- Alt text for all images
-- Keyboard navigation support
-- Focus management for interactive elements
-
-## Page Component Examples
-
-### Destination Page Key Features
+**Suggested Enhancements**: Explore advanced Supabase features
 
 ```typescript
-// State management
-const [currentDestination, setCurrentDestination] = useState(destinations[0])
-const [isTransitioning, setIsTransitioning] = useState(false)
+// Add real-time subscriptions
+export function useRealtimeData() {
+  const [data, setData] = useState([])
 
-// Smooth transitions
-const handleDestinationChange = (destination) => {
-  setIsTransitioning(true)
-  setTimeout(() => {
-    setCurrentDestination(destination)
-    setTimeout(() => setIsTransitioning(false), 50)
-  }, 300)
+  useEffect(() => {
+    const subscription = supabase
+      .channel('crew_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'crew_members' }, (payload) => {
+        // Handle real-time updates
+        console.log('Change received!', payload)
+      })
+      .subscribe()
+
+    return () => supabase.removeChannel(subscription)
+  }, [])
+}
+
+// Add Row Level Security (RLS) policies
+// Add database functions and triggers
+// Explore Supabase Edge Functions
+```
+
+### 2. Simplify Authentication
+
+**Current Issue**: Complex auth sync with multiple moving parts
+
+**Suggested Solution**: Simplify to essential auth only
+
+```typescript
+// Simplified AuthContext
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  return <AuthContext.Provider value={{ user, loading }}>{children}</AuthContext.Provider>
 }
 ```
 
-### Crew Page Key Features
+### 3. Reduce Component Complexity
+
+**Current Issue**: Over-engineered components with many props
+
+**Suggested Solution**: Simplify shared components
 
 ```typescript
-// Mobile vs. desktop layout
-<article className="order-2 md:order-1 lg:order-1 text-center md:text-center lg:text-left">
-  {/* Content */}
-</article>
-
-<figure className="order-1 md:order-2 lg:order-2">
-  {/* Image */}
-</figure>
-
-// Navigation dots position
-<nav className="hidden md:flex gap-4 justify-center lg:justify-start lg:mt-auto lg:mb-20 md:mt-10">
-  {/* Dots */}
-</nav>
-```
-
-### Technology Page Key Features
-
-```typescript
-// Mobile/tablet landscape image
-<section className="block lg:hidden w-full mt-8 md:mt-14">
-  {/* Landscape image */}
-</section>
-
-// Desktop portrait image
-<section className="hidden lg:block lg:flex-1 lg:max-w-[50%]">
-  {/* Portrait image with max-width */}
-  <img className="w-full max-w-[34.375rem] h-[527px]" />
-</section>
-
-// Flexible layout
-<article className="lg:flex-1">
-  {/* Content */}
-</article>
-```
-
-## Future Extensions
-
-When updating the project in the future:
-
-1. **Adding New Pages**:
-
-   - Create a new route folder in `app/routes/_layout.[page-name]/`
-   - Follow the established semantic HTML structure
-   - Implement responsive design following existing patterns
-   - Add appropriate error handling
-
-2. **Modifying Components**:
-
-   - Maintain accessibility attributes
-   - Keep responsive classes consistent
-   - Follow established naming conventions
-   - Use existing color and spacing system
-
-3. **Enhancing Data**:
-
-   - Update types in `app/types/`
-   - Add loaders and error handling
-   - Consider data fetching performance
-
-4. **Improving Performance**:
-   - Optimize image loading with priority flags
-   - Use transitions for smoother UX
-   - Implement proper error boundaries
-
-This structure ensures consistency, maintainability, and adherence to web best practices throughout the project.
-
-## Mobile Viewport Handling
-
-### Critical Viewport Issue Solution
-
-This project encountered a common but difficult-to-debug mobile viewport scaling issue where:
-
-- Mobile browsers defaulted to a 980px viewport width (desktop layout)
-- The content was then scaled down to fit smaller screens (typically with visualViewport.scale < 1)
-- This resulted in desktop layouts being displayed and scaled on mobile devices
-
-The solution is implemented in two parts:
-
-1. **Viewport Meta Tag Configuration** (in `app/root.tsx`):
-
-   ```tsx
-   export const meta: MetaFunction = () => [
-     {
-       name: 'viewport',
-       content: 'width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover',
-       key: 'viewport',
-     },
-     // ...other meta tags
-   ]
-   ```
-
-2. **Runtime Viewport Enforcement** (in `app/routes/_layout/route.tsx`):
-
-   ```tsx
-   // Force viewport to use actual device width
-   useEffect(() => {
-     // Force viewport meta tag to use actual device width
-     const meta = document.createElement('meta')
-     meta.name = 'viewport'
-     meta.content = 'width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover'
-
-     // Remove any existing viewport meta tags and add our new one
-     document.querySelectorAll('meta[name="viewport"]').forEach((el) => el.remove())
-     document.head.appendChild(meta)
-
-     // Try to prevent any default scaling
-     const styleElement = document.createElement('style')
-     styleElement.textContent = `
-       @viewport {
-         width: device-width;
-         zoom: 1.0;
-       }
-       
-       html, body {
-         min-width: initial !important;
-         min-height: initial !important;
-         max-width: 100vw !important;
-         overflow-x: hidden !important;
-         width: 100% !important;
-       }
-     `
-     document.head.appendChild(styleElement)
-
-     return () => {
-       styleElement.remove()
-     }
-   }, [])
-   ```
-
-### Why This Is Difficult to Detect
-
-This issue is particularly challenging in Remix (and other SPAs) for several reasons:
-
-1. **Meta Tag Handling**:
-
-   - Remix uses a declarative approach to meta tags with the `Meta` component
-   - During client-side navigation, meta tags can sometimes be overridden or not correctly updated
-
-2. **Browser Differences**:
-
-   - Mobile browsers have various default behaviors for viewport handling
-   - iOS Safari in particular often defaults to 980px width viewports regardless of meta tags
-
-3. **Client-Side Routing**:
-   - When routes change, the viewport meta settings may not be consistently reapplied
-
-If these viewport issues occur in the future:
-
-1. Use the `ViewportDebug` component to check if innerWidth and visualViewport dimensions match
-2. Look for visualViewport.scale values that aren't 1, indicating content scaling
-3. Implement the aggressive viewport enforcement approach shown above
-
-This solution ensures that mobile devices correctly use their native display size rather than desktop widths with scaling.
-
-## Tailwind CSS v4.1 Integration
-
-This project uses Tailwind CSS v4.1 with its simplified Vite plugin approach, eliminating the need for separate configuration files.
-
-### Streamlined Setup
-
-1. **Vite Plugin Configuration** (in `vite.config.ts`):
-
-   ```ts
-   import tailwindcss from '@tailwindcss/vite'
-
-   export default defineConfig({
-     plugins: [
-       // other plugins...
-       tailwindcss(),
-     ],
-   })
-   ```
-
-2. **CSS Import** (in `app/tailwind.css`):
-
-   ```css
-   @import 'tailwindcss';
-   ```
-
-3. **Custom Theme Variables** (in `app/tailwind.css`):
-
-   ```css
-   @theme {
-     --screen-xs: 375px; /* Custom screen breakpoint */
-     --color-white: #ffffff;
-     --color-black: #000000;
-     --color-dark: #0b0d17;
-     --color-accent: #d0d6f9;
-
-     /* Fonts */
-     --font-bellefair: 'Bellefair', serif;
-     --font-barlow: 'Barlow', sans-serif;
-     --font-barlow-condensed: 'Barlow Condensed', sans-serif;
-   }
-   ```
-
-### Benefits of This Approach
-
-- **Simplified Configuration**: No need for separate `tailwind.config.js` or PostCSS configuration files
-- **Direct CSS Control**: Custom values are defined directly in CSS using the `@theme` directive
-- **Faster Build Times**: The Vite plugin optimizes scanning and CSS generation
-- **Reduced Dependencies**: No need for PostCSS plugins or extra configuration
-
-### Using Custom Values
-
-Custom values defined in the `@theme` section can be accessed throughout the project:
-
-```css
-/* Example of using custom colors */
-.custom-element {
-  color: var(--color-accent);
-  font-family: var(--font-bellefair);
+// Simplified OptimizedImage
+export default function OptimizedImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+  return <img src={src} alt={alt} className={className} loading="lazy" />
 }
 ```
 
-Breakpoints defined with `--screen-*` are automatically available in responsive utilities:
+### 4. Streamline File Structure
 
-```html
-<div class="block xs:flex">
-  <!-- Uses the custom xs:375px breakpoint -->
-</div>
+**Remove unnecessary complexity**:
+
+- Combine `app/api/` into `app/utils/` if minimal
+- Move `app/styles/` content into `app/tailwind.css`
+- Consider removing `scripts/dev.js` and use direct `react-router dev`
+
+### 5. Simplify Environment Variables
+
+**Current**: Multiple environment variable patterns
+
+```env
+VITE_SUPABASE_URL=...
+SUPABASE_URL=...
 ```
 
-### Migration from Previous Versions
+**Suggested**: Standardize on one pattern
 
-When migrating from Tailwind CSS v3.x:
+```env
+# Use VITE_ prefix for client-side access
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+```
 
-1. Remove `tailwind.config.js` and PostCSS configuration files
-2. Move custom theme extensions to the `@theme` section in your CSS file
-3. Update your Vite configuration to use the simplified plugin syntax
-4. Make sure your CSS file imports Tailwind CSS with `@import "tailwindcss"`
+### 6. Reduce Navigation Complexity
+
+**Current Issue**: Multiple navigation patterns with complex state management
+
+**Suggested Solution**: Standardize navigation pattern
+
+```typescript
+// Simple navigation hook
+function useNavigation<T>(items: T[], initialIndex = 0) {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex)
+
+  return {
+    currentItem: items[currentIndex],
+    currentIndex,
+    setIndex: setCurrentIndex,
+    next: () => setCurrentIndex((i) => (i + 1) % items.length),
+    prev: () => setCurrentIndex((i) => (i - 1 + items.length) % items.length),
+  }
+}
+```
+
+## Development Workflow
+
+### Scripts
+
+```json
+{
+  "dev": "react-router dev",
+  "build": "react-router build",
+  "start": "react-router-serve ./build/server/index.js",
+  "typecheck": "react-router typegen && tsc"
+}
+```
+
+### Key Commands
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run typecheck    # Type checking
+npm run deploy       # Deploy to Vercel
+```
+
+## Future Improvements
+
+### Performance Optimizations
+
+1. **Image Optimization**: Implement next-gen image formats
+2. **Code Splitting**: Lazy load route components
+3. **Caching**: Add service worker for offline support
+
+### Developer Experience
+
+1. **Testing**: Add unit and integration tests
+2. **Documentation**: Add component documentation with Storybook
+3. **Linting**: Enhance ESLint rules for consistency
+
+### Feature Enhancements
+
+1. **Animations**: Add page transitions and micro-interactions
+2. **Accessibility**: Enhance keyboard navigation and screen reader support
+3. **Internationalization**: Add multi-language support
+
+## Conclusion
+
+This React Router 7 implementation provides a solid foundation for a modern web application. The suggested simplifications would reduce complexity while maintaining functionality, making the codebase more approachable for new developers and easier to maintain long-term.
+
+The migration to React Router 7 and React 19 positions the project to take advantage of the latest web development features while maintaining excellent performance and developer experience.

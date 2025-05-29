@@ -1,6 +1,6 @@
 import React from 'react'
-import type { MetaFunction } from '@remix-run/node'
-import { isRouteErrorResponse, Link, useRouteError } from '@remix-run/react'
+import type { MetaFunction } from 'react-router';
+import { isRouteErrorResponse, Link, useRouteError } from 'react-router';
 import OptimizedBackground from '~/components/shared/OptimizedBackground'
 
 export const meta: MetaFunction = () => [

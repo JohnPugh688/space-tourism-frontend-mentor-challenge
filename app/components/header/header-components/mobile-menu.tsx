@@ -1,7 +1,8 @@
-import { NavLink, useNavigation } from '@remix-run/react'
+import { NavLink, useNavigation } from 'react-router';
 import { useEffect } from 'react'
+import { useAuth } from '~/context/AuthContext'
 
-const navItems = [
+const publicNavItems = [
   { to: '/', number: '00', label: 'HOME' },
   { to: '/destination', number: '01', label: 'DESTINATION' },
   { to: '/crew', number: '02', label: 'CREW' },
@@ -15,6 +16,12 @@ interface MobileMenuProps {
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const navigation = useNavigation()
+  const { user } = useAuth()
+
+  const navItems = [
+    ...publicNavItems,
+    ...(user ? [{ to: '/mission-control', number: '04', label: 'MISSION CONTROL' }] : []),
+  ]
 
   // Close menu when navigation starts
   useEffect(() => {
@@ -65,15 +72,15 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         className={`fixed top-0 bottom-0 right-0 w-[254px] max-w-[80vw] transform transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        <div className="h-full backdrop-blur-2xl bg-white/[0.04]">
+        <div className="h-full backdrop-blur-md bg-black/40">
           <div className="flex justify-end px-6 pt-8">
             <button
               onClick={onClose}
-              className="text-white p-2 hover:opacity-80 transition-opacity"
+              className="text-amber-400 p-2 hover:text-amber-300 transition-colors"
               aria-label="Close menu"
             >
               <svg width="20" height="21" xmlns="http://www.w3.org/2000/svg">
-                <g fill="#D0D6F9" fillRule="evenodd">
+                <g fill="currentColor" fillRule="evenodd">
                   <path d="M2.575.954l16.97 16.97-2.12 2.122L.455 3.076z" />
                   <path d="M.454 17.925L17.424.955l2.122 2.12-16.97 16.97z" />
                 </g>
@@ -91,11 +98,11 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     className={({ isActive }) =>
                       `flex items-center gap-3 font-barlow-condensed text-white text-base tracking-[2.7px] 
                       transition-colors duration-200
-                      ${isActive ? 'text-white' : 'text-[#D0D6F9] hover:text-white'}`
+                      ${isActive ? 'text-amber-400' : 'text-slate-300 hover:text-amber-300'}`
                     }
                     end={item.to === '/'}
                   >
-                    <span className="font-bold">{item.number}</span>
+                    <span className="font-bold text-amber-400">{item.number}</span>
                     <span>{item.label}</span>
                   </NavLink>
                 </li>

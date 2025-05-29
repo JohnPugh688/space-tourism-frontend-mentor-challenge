@@ -1,24 +1,20 @@
+interface ImageSet {
+  webp: string
+  fallback: string
+}
+
 interface OptimizedBackgroundProps {
+  mobileImage: ImageSet
+  tabletImage: ImageSet
+  desktopImage: ImageSet
   className?: string
-  mobileImage: {
-    webp: string
-    fallback: string
-  }
-  tabletImage: {
-    webp: string
-    fallback: string
-  }
-  desktopImage: {
-    webp: string
-    fallback: string
-  }
 }
 
 export default function OptimizedBackground({
-  className = '',
   mobileImage,
   tabletImage,
   desktopImage,
+  className = '',
 }: OptimizedBackgroundProps) {
   return (
     <picture className={`absolute inset-0 w-full h-full overflow-hidden ${className}`}>

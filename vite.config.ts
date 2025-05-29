@@ -1,20 +1,10 @@
-import { vitePlugin as remix } from '@remix-run/dev'
-import { installGlobals } from '@remix-run/node'
+import { reactRouter } from '@react-router/dev/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
-import { vercelPreset } from '@vercel/remix/vite'
-
-installGlobals()
 
 export default defineConfig({
-  plugins: [
-    remix({
-      presets: [vercelPreset()],
-    }),
-    tsconfigPaths(),
-    tailwindcss(),
-  ],
+  plugins: [reactRouter(), tsconfigPaths(), tailwindcss()],
   server: {
     fs: {
       // Restrict files that could be served by Vite's dev server.  Accessing
